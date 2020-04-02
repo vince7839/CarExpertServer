@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}">
+    <title>Title</title>
+</head>
+<body>
+<div id="test1" style="text-align: center"></div>
+
+<div class="layui-card" style="text-align: center">
+    <div class="layui-card-header">目录</div>
+    <div class="layui-card-body" th:each="item:${items}">
+        <div class="layui-row" >
+            <i class="layui-icon layui-icon-component"></i>
+            <a style="color: blue;text-decoration: underline"
+               th:text="${item.name}" th:href="@{/home(parent=${item.id})}"></a>
+
+        </div>
+    </div>
+    <div class="layui-card-body" th:if="${level} eq '0'">
+        1111
+    </div>
+</div>
+<script th:src="@{/layui/layui.all.js}"></script>
+</body>
+<script>
+</script>
+</html>
