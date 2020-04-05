@@ -14,6 +14,12 @@ public class Result {
         return r;
     }
 
+    public static Result fail(String msg){
+        Result r = new Result();
+        r.msg = msg;
+        return r;
+    }
+
     public static Result success(Object data){
         Result r = new Result();
         r.data = data;

@@ -8,12 +8,14 @@ import javax.persistence.Id;
 
 @Entity
 @Data
-public class Directory {
+public class User {
     @Id
     @GeneratedValue
-    int id;
-    int level;
-    int parent;
-    int priority;
+    Integer id;
     String name;
+    String password;
+    String phone;
+    Integer type;
+    Integer permission;
 }
+

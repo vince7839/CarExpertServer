@@ -8,14 +8,17 @@ import javax.persistence.Id;
 
 @Entity
 @Data
-public class Item {
+public class Question {
     @Id
     @GeneratedValue
     Integer id;
-    Integer level;
     Integer parent;
-    Integer priority;
-    String type;
-    String name;
-    String path;
+    String title;
+    String a;
+    String b;
+    String c;
+    String d;
+    Integer answer;
+    String reason;
+    Integer sortIndex;
 }

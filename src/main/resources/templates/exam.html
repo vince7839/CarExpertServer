@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>添加题目</title>
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}">
+    <script type="text/javascript" th:src="@{/js/jquery-3.4.1.min.js}"></script>
+</head>
+<body bgcolor="#eeeeee">
+<div class="layui-col-md6 layui-col-md-offset3">
+    <div class="layui-tab layui-tab-brief" >
+        <ul class="layui-tab-title" style="text-align: center">
+            <li>添加题目</li>
+            <li class="layui-this">已有题目</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item">
+                <div class="layui-card">
+                    <div class="layui-card-header" style="text-align: center">添加题目</div>
+                    <div class="layui-card-body">
+                        <form id="question_form" class="layui-form layui-form-pane" th:action="@{/question/save}">
+                            <input type="hidden" name="parent" th:value="${parent}">
+                            <div class="layui-form-item layui-form-text">
+                                <label class="layui-form-label">题目</label>
+                                <div class="layui-input-block">
+                                    <textarea name="title" class="layui-textarea"></textarea>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">选项A</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="a" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">选项B</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="b" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">选项C</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="c" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">选项D</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="d" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item" pane="">
+                                <label class="layui-form-label">正确答案</label>
+                                <div class="layui-input-block">
+                                    <input type="checkbox" name="answers" title="A" value="A" lay-skin="primary">
+                                    <input type="checkbox" name="answers" title="B" value="B" lay-skin="primary">
+                                    <input type="checkbox" name="answers" title="C" value="C" lay-skin="primary">
+                                    <input type="checkbox" name="answers" title="D" value="D" lay-skin="primary">
+                                </div>
+                            </div>
+                            <div class="layui-form-item layui-form-text">
+                                <label class="layui-form-label">解析</label>
+                                <div class="layui-input-block">
+                                    <textarea name="reason" class="layui-textarea"></textarea>
+                                </div>
+                            </div>
+                            <div class="layui-form-item" style="text-align: center">
+                                <input type="submit" class="layui-btn" th:value="添加"/>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-tab-item layui-show">
+                <div th:each="q:${questions}">
+                    <div class="layui-card" style="margin-top: 1%">
+                        <div class="layui-card-body">
+                            <form class="layui-form layui-form-pane" th:action="@{/question/save}">
+                                <input type="hidden" name="id" th:value="${q.id}">
+                                <input type="hidden" name="parent" th:value="${q.parent}">
+                                <div class="layui-form-item layui-form-text">
+                                    <label class="layui-form-label">题目</label>
+                                    <div class="layui-input-block">
+                                        <textarea name="title" class="layui-textarea" th:text="${q.title}"></textarea>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">选项A</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="a" class="layui-input" th:value="${q.a}">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">选项B</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="b" class="layui-input" th:value="${q.b}">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">选项C</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="c" class="layui-input" th:value="${q.c}">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">选项D</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="d" class="layui-input" th:value="${q.d}">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item" pane="">
+                                    <label class="layui-form-label">正确答案</label>
+                                    <div class="layui-input-block">
+                                        <input type="checkbox" th:checked="${comparator.isOptionRight('A',q.answer)}"
+                                               name="answers" title="A" value="A" lay-skin="primary">
+                                        <input type="checkbox" th:checked="${comparator.isOptionRight('B',q.answer)}"
+                                               name="answers" title="B" value="B" lay-skin="primary">
+                                        <input type="checkbox" th:checked="${comparator.isOptionRight('C',q.answer)}"
+                                               name="answers" title="C" value="C" lay-skin="primary">
+                                        <input type="checkbox" th:checked="${comparator.isOptionRight('D',q.answer)}"
+                                               name="answers" title="D" value="D" lay-skin="primary">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item layui-form-text">
+                                    <label class="layui-form-label">解析</label>
+                                    <div class="layui-input-block">
+                                        <textarea name="reason" class="layui-textarea" th:text="${q.reason}"></textarea>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item" style="text-align: center">
+                                    <button type="submit" class="layui-btn layui-icon layui-icon-ok">更新</button>
+
+                                    <button type="button" th:onclick="|deleteQuestion(${q.id})|"
+                                            class="layui-btn layui-btn-danger layui-icon  layui-icon-delete">删除
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" th:src="@{/layui/layui.all.js}"></script>
+<script>
+    function deleteQuestion(id) {
+        $.get("/carexpert/question/delete/"+id,function (res) {
+
+            if (res.state == 200){
+                alert('删除成功')
+                window.location.reload()
+            } else {
+                alert('删除失败')
+            }
+        })
+    }
+</script>
+</html>

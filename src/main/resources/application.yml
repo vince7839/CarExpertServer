@@ -1,3 +1,25 @@
 server:
   servlet:
     context-path: /carexpert
+spring:
+  jpa:
+    database: h2
+    generate-ddl: false
+    hibernate:
+      ddl-auto: update
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:file:./db/carexpert
+  servlet:
+    multipart:
+      max-file-size: 1024MB
+      max-request-size: 1024MB
+  h2:
+    console:
+      enabled: true
+      settings:
+        web-allow-others: true
+  mvc:
+    view:
+      prefix: /
+      suffix: .html

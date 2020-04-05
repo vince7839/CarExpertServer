@@ -3,27 +3,138 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" th:href="@{/layui/css/layui.css}">
+    <script type="text/javascript" th:src="@{/js/jquery-3.4.1.min.js}"></script>
     <title>Title</title>
 </head>
 <body>
-<div id="test1" style="text-align: center"></div>
 
-<div class="layui-card" style="text-align: center">
+<div class="layui-card layui-col-md4 layui-col-md-offset4" style="text-align: center;background: #eeeeee;margin-top:1%">
     <div class="layui-card-header">目录</div>
+    <div class="layui-row" th:if="${level} == 3 and ${type} eq null">
+        <i class="layui-icon layui-icon-file" style="font-size: 20px"></i>
+        <a style="color: blue;text-decoration: underline;font-size: 20px"
+           th:href="@{/home(parent=${parent},type='document')}">课件</a>
+    </div>
+    <div class="layui-row" th:if="${level} == 3 and ${type} eq null">
+        <i class="layui-icon layui-icon-video" style="font-size: 20px"></i>
+        <a style="color: blue;text-decoration: underline;font-size: 20px"
+           th:href="@{/home(parent=${parent},type='video')}">视频</a>
+    </div>
+    <div class="layui-row" th:if="${level} == 3 and ${type} eq null">
+        <i class="layui-icon layui-icon-picture" style="font-size: 20px"></i>
+        <a style="color: blue;text-decoration: underline;font-size: 20px"
+           th:href="@{/home(parent=${parent},type='image')}">图文</a>
+    </div>
+    <div class="layui-row" th:if="${level} == 3 and ${type} eq null">
+        <i class="layui-icon layui-icon-survey" style="font-size: 20px"></i>
+        <a style="color: blue;text-decoration: underline;font-size: 20px"
+           th:href="@{/exam(parent=${parent})}">测评</a>
+    </div>
     <div class="layui-card-body" th:each="item:${items}">
-        <div class="layui-row" >
-            <i class="layui-icon layui-icon-component"></i>
-            <a style="color: blue;text-decoration: underline"
+        <div class="layui-row" style="text-align:left; margin-left: 15%">
+            <i class="layui-icon layui-icon-component" style="font-size: 20px"></i>
+            <a th:if="${type} eq null"
+               style="font-size: 20px;color: blue;text-decoration: underline"
                th:text="${item.name}" th:href="@{/home(parent=${item.id})}"></a>
-
+            <span th:if="${type} ne null" style="font-size: 20px" th:text="${item.name}"></span>
+            <button th:if="${level} != 0 and ${type} eq null"
+                    class="layui-icon layui-icon-edit" th:onclick="|editItem(${item.id})|"></button>
+            <button th:if="${level} != 0"
+                    class="layui-icon layui-icon-delete" th:onclick="|deleteItem(${item.id})|"></button>
         </div>
     </div>
-    <div class="layui-card-body" th:if="${level} eq '0'">
-        1111
+    <div class="layui-card-body" th:if="${level} == 1 or ${level} == 2">
+        <button class="layui-icon layui-icon-add-1" th:onclick="|addItem(${parent},${level})|">添加</button>
     </div>
+    <div class="layui-card-body" th:if="${level} == 3 and ${type} != null">
+        <button id="uploadBtn" class="layui-icon layui-icon-upload">上传</button>
+        <i id="loading" style="visibility: hidden" class="layui-icon layui-icon-loading layui-icon layui-anim layui-anim-rotate layui-anim-loop"></i>
+        <span id="process"></span>
+    </div>
+
 </div>
-<script th:src="@{/layui/layui.all.js}"></script>
 </body>
-<script>
+<input type="hidden" id="parent" th:value="${parent}">
+<input type="hidden" id="type" th:value="${type}">
+<script th:src="@{/layui/layui.all.js}"></script>
+<script type="text/javascript">
+    function addItem(parent, level) {
+        var name = prompt("请输入目录名字")
+        if (name != null && name != "") {
+            var url = "/carexpert/item/add";
+            $.get(url,
+                {name: name, level: level, parent: parent},
+                function (response) {
+                    console.log(response);
+                    alert(response.state == 200 ? '创建成功' : '创建失败')
+                    window.location.reload()
+                })
+        } else {
+            alert('名字不能为空！')
+        }
+    }
+
+    function editItem(id) {
+        var name = prompt("请输入新名字")
+        if (name != "") {
+            if (name != "") {
+                var url = "/carexpert/item/edit";
+                $.get(url,
+                    {name: name, id: id},
+                    function (response) {
+                        console.log(response);
+                        alert(response.state == 200 ? '修改成功' : '修改失败')
+                        window.location.reload()
+                    })
+            } else {
+                alert('名字不能为空！')
+            }
+        }
+    }
+
+    function deleteItem(id) {
+        var r = confirm('是否删除该项？')
+        if (!r) {
+            return;
+        }
+        var url = "/carexpert/item/delete";
+        $.get(url, {id: id},
+            function (response) {
+                console.log(response);
+                alert(response.state == 200 ? '删除成功' : '删除失败')
+                window.location.reload()
+            })
+    }
+
+</script>
+<script th:inline="javascript">
+
+
+    var parent = $("#parent").val();
+    var type = $("#type").val();
+    var ext = type == 'document' ? 'ppt|pdf' : (type == 'video' ? 'mp4':'jpg|jpeg|png');
+    console.log(ext);
+    layui.upload.render({
+        elem: '#uploadBtn'
+        , url: '/carexpert/upload'
+        , data: {parent: parent}
+        , exts: ext
+        , multiple: true
+        ,before: function(obj){
+            $('#loading').show()
+        }
+        , allDone: function (obj) {
+            var msg = '成功上传'+obj.successful+'个文件';
+            alert(msg)
+            window.location.reload()
+        }
+        , error: function () {
+            alert('上传失败')
+            window.location.reload()
+        }
+        , progress: function (n, elem) {
+            $('#process').text(n)
+        }
+    });
 </script>
 </html>
