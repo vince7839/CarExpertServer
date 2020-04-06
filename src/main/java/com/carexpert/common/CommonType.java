@@ -2,7 +2,7 @@ package com.carexpert.common;
 
 import java.util.Arrays;
 
-public class ItemConstant {
+public class CommonType {
     public static final int NO_PARENT = -1;
     public static final int ITEM_LEVEL_TOP = 0;
     public static final int ITEM_LEVEL_ONE = 1;
@@ -12,6 +12,24 @@ public class ItemConstant {
     public static final String ITEM_TYPE_VIDEO = "video";
     public static final String ITEM_TYPE_IMAGE = "image";
     public static final String ITEM_TYPE_DIRECTORY = "directory";
+
+    public static final int USER_TYPE_NORMAL = 100;
+    public static final int USER_TYPE_ADMIN = 101;
+    public static final int USER_TYPE_SUPER = 102;
+
+    public static final int MODULE_FLAG_1 = 1 << 1;
+    public static final int MODULE_FLAG_2 = 1 << 2;
+    public static final int MODULE_FLAG_3 = 1 << 3;
+    public static final int MODULE_FLAG_4 = 1 << 4;
+    public static final int MODULE_FLAG_5 = 1 << 5;
+    public static final int MODULE_FLAG_6 = 1 << 6;
+    public static final int MODULE_FLAG_7 = 1 << 7;
+    public static final int MODULE_FLAG_8 = 1 << 8;
+    public static final int MODULE_FLAG_9 = 1 << 9;
+    public static final int MODULE_FLAG_10 = 1 << 10;
+    public static final int MODULE_FLAG_11 = 1 << 11;
+    public static final int MODULE_FLAG_12 = 1 << 12;
+    public static final int MODULE_FLAG_13 = 1 << 13;
 
     public static final String[] documentType = new String[]{".ppt",".pdf"};
     public static final String[] videoType = new String[]{".mp4"};
@@ -32,4 +50,5 @@ public class ItemConstant {
             return null;
         }
     }
+
 }

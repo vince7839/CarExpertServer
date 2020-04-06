@@ -1,6 +1,6 @@
 package com.carexpert.controller;
 
-import com.carexpert.common.ExamUtil;
+import com.carexpert.common.CommonUtil;
 import com.carexpert.common.Result;
 import com.carexpert.entity.Question;
 import com.carexpert.service.QuestionService;
@@ -25,7 +25,7 @@ public class ExamController {
         List<Question> questions = service.findByParent(parent);
         mv.addObject("questions",questions);
         mv.addObject("parent",parent);
-        mv.addObject("comparator",new ExamUtil());
+        mv.addObject("comparator",new CommonUtil());
         mv.setViewName("exam");
         return mv;
     }

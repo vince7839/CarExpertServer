@@ -1,6 +1,5 @@
 package com.carexpert.service;
 
-import com.carexpert.common.ItemConstant;
 import com.carexpert.dao.ItemRepository;
 import com.carexpert.entity.Item;
 import org.springframework.beans.factory.annotation.Autowired;

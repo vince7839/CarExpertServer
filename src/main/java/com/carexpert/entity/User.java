@@ -12,7 +12,7 @@ public class User {
     @Id
     @GeneratedValue
     Integer id;
-    String name;
+    String username;
     String password;
     String phone;
     Integer type;

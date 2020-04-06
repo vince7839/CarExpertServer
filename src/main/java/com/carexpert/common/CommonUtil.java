@@ -2,7 +2,7 @@ package com.carexpert.common;
 
 import org.springframework.util.StringUtils;
 
-public class ExamUtil {
+public class CommonUtil {
     public static boolean isOptionRight(String option, Integer answer) {
         Integer builder = 0;
         if (StringUtils.isEmpty(answer)){
@@ -17,5 +17,9 @@ public class ExamUtil {
             builder = answer & 0x1000;
         }
         return builder != 0;
+    }
+
+    public static boolean isModuleEnable(Integer permission,Integer moduleFlag){
+        return (permission & moduleFlag) != 0;
     }
 }

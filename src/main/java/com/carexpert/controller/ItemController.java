@@ -1,6 +1,6 @@
 package com.carexpert.controller;
 
-import com.carexpert.common.ItemConstant;
+import com.carexpert.common.CommonType;
 import com.carexpert.common.Result;
 import com.carexpert.entity.Item;
 import com.carexpert.service.ItemService;
@@ -15,7 +15,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.constraints.NotNull;
 import java.io.File;
-import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -28,14 +27,14 @@ public class ItemController {
     public ModelAndView home(ModelAndView mv, Integer parent, String type) {
         List<Item> items = null;
         if (parent == null) {//没有parent则查询顶级目录
-            parent = ItemConstant.NO_PARENT;
-            mv.addObject("level", ItemConstant.ITEM_LEVEL_TOP);
+            parent = CommonType.NO_PARENT;
+            mv.addObject("level", CommonType.ITEM_LEVEL_TOP);
             items = itemService.findByParent(parent);
         } else {
             System.out.println(itemService.findById(parent));
             Integer childLevel = itemService.getChildLevel(parent);
             mv.addObject("level", childLevel);
-            if (childLevel.equals(ItemConstant.ITEM_LEVEL_FILE)) {
+            if (childLevel.equals(CommonType.ITEM_LEVEL_FILE)) {
                 items = StringUtils.isEmpty(type) ? null : itemService.findFile(parent, type);
             } else {
                 items = itemService.findByParent(parent);
@@ -88,7 +87,7 @@ public class ItemController {
             dir.mkdirs();
         }
         String name = file.getOriginalFilename().toLowerCase();
-        String type = ItemConstant.getFileType(name);
+        String type = CommonType.getFileType(name);
         System.out.println("name:" + name);
         if (type == null) {
             System.out.println("不支持的格式");
@@ -104,7 +103,7 @@ public class ItemController {
                 Item item = new Item();
                 item.setParent(parent);
                 item.setName(name);
-                item.setLevel(ItemConstant.ITEM_LEVEL_FILE);
+                item.setLevel(CommonType.ITEM_LEVEL_FILE);
                 item.setPath(dest.getAbsolutePath());
                 item.setType(type);
                 itemService.addItem(item);
