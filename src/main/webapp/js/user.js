@@ -15,14 +15,17 @@ function queryCallback(json) {
     $("#tbody").empty();
     $.each(json.data, function (index, item) {
         console.log(item);
-        var row = "<tr>"
+        var row = "<tr onclick='userQuery("+item.id +")'>"
             + "<td style='text-align: center'>" + item.id + "</td>"
             + "<td style='text-align: center'>" + item.username + "</td>"
             + "<td style='text-align: center'>" + item.phone + "</td>"
             + "</tr>";
         $("#tbody").append(row);
     })
-    layui.element.tabChange('mytab',0);
+}
+
+function userQuery(id) {
+    window.location.href="/carexpert/user/"+id;
 }
 
 function refresh(page) {
@@ -34,7 +37,7 @@ function refresh(page) {
 $("#form").submit(function () {
     $.post("/carexpert/user/save", $("#form").serialize(), function (data) {
         console.log(data)
-        if (data.code == 200) {
+        if (data.state == 200) {
             alert("添加成功")
             window.location.reload();
         } else {

@@ -1,5 +1,6 @@
 package com.carexpert.controller;
 
+import com.carexpert.common.CommonUtil;
 import com.carexpert.common.PageVO;
 import com.carexpert.common.Result;
 import com.carexpert.dao.UserRepository;
@@ -22,16 +23,16 @@ public class UserController {
     UserService service;
 
     @RequestMapping("/user")
-    public String user(ModelAndView mv,Integer page){
+    public String user(ModelAndView mv, Integer page) {
 
         return "user";
     }
 
     @RequestMapping("/user/page/{page}")
     @ResponseBody
-    public PageVO page(@PathVariable Integer page){
+    public PageVO page(@PathVariable Integer page) {
         Page<User> result = service.findByPage(page);
-        System.out.println(""+result.getNumber()+" "+result.getNumberOfElements());
+        System.out.println("" + result.getNumber() + " " + result.getNumberOfElements());
         PageVO vo = new PageVO();
         vo.setCount(result.getTotalElements());
         vo.setPage(page);
@@ -41,11 +42,13 @@ public class UserController {
 
     @RequestMapping("/user/save")
     @ResponseBody
-    public Result add(User user,int[] module){
-        System.out.println("user save"+user+" "+ Arrays.toString(module));
+    public Result add(User user, int[] module) {
+        System.out.println("user save" + user + " " + Arrays.toString(module));
         int temp = 0;
-        for (int i: module) {
-            temp |= (1 << i);
+        if (module != null) {
+            for (int i : module) {
+                temp |= (1 << i);
+            }
         }
         System.out.println(temp);
         user.setPermission(temp);
@@ -54,10 +57,10 @@ public class UserController {
     }
 
     @RequestMapping("/user/{id}")
-    @ResponseBody
-    public ModelAndView add(@PathVariable Integer id,ModelAndView mv){
+    public ModelAndView add(@PathVariable Integer id, ModelAndView mv) {
         User user = service.findById(id);
-        mv.addObject("user",user);
+        mv.addObject("user", user);
+        mv.addObject("util", new CommonUtil());
         mv.setViewName("info");
         return mv;
     }

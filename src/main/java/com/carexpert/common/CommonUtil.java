@@ -19,7 +19,10 @@ public class CommonUtil {
         return builder != 0;
     }
 
-    public static boolean isModuleEnable(Integer permission,Integer moduleFlag){
-        return (permission & moduleFlag) != 0;
+    public static boolean isModuleEnable(Integer permission,Integer flag){
+        if(permission == null || flag == null){
+            return false;
+        }
+        return (permission & (1 << flag)) != 0;
     }
 }
