@@ -1,11 +1,14 @@
 package com.carexpert.service;
 
+import com.carexpert.common.CommonType;
+import com.carexpert.common.NodeVO;
 import com.carexpert.dao.ItemRepository;
 import com.carexpert.entity.Item;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -67,5 +70,18 @@ public class ItemService {
                 deleteRecursively(child.getId());
             }
         }
+    }
+
+    public List<NodeVO> getNodeList(Integer top){
+        List<NodeVO> list = new ArrayList<>();
+        List<Item> ones = repository.findByParent(top);
+        for (Item i:ones){
+            NodeVO node = new NodeVO();
+            List<Item> children = repository.findByParent(i.getId());
+            node.setSelf(i);
+            node.setChildren(children);
+            list.add(node);
+        }
+        return list;
     }
 }

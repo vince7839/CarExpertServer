@@ -1,6 +1,7 @@
 package com.carexpert.controller;
 
 import com.carexpert.common.CommonType;
+import com.carexpert.common.NodeVO;
 import com.carexpert.common.Result;
 import com.carexpert.entity.Item;
 import com.carexpert.service.ItemService;
@@ -9,12 +10,14 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.constraints.NotNull;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -110,5 +113,12 @@ public class ItemController {
             }
         }
         return Result.success(null);
+    }
+
+    @RequestMapping("/node/{top}")
+    @ResponseBody
+    public List<NodeVO> node(@PathVariable Integer top){
+        List<NodeVO> list = itemService.getNodeList(top);
+        return list;
     }
 }
