@@ -15,8 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -117,8 +121,37 @@ public class ItemController {
 
     @RequestMapping("/node/{top}")
     @ResponseBody
-    public List<NodeVO> node(@PathVariable Integer top){
+    public List<NodeVO> node(@PathVariable Integer top) {
         List<NodeVO> list = itemService.getNodeList(top);
         return list;
+    }
+
+
+    @RequestMapping("/video/{id}")
+    public Result video(@PathVariable Integer id, HttpServletResponse response) throws Exception {
+
+        Item item = itemService.findById(id);
+        System.out.println("video"+item);
+        if (item == null) {
+            return Result.fail("invalid id");
+        } else {
+            //InputStream in = getClass().getResourceAsStream(item.getPath());
+            InputStream in = new FileInputStream(item.getPath());
+            if (in == null) {
+                return Result.fail("file not exist");
+            }
+            //response.setContentType("video/mp4");
+            response.setContentType("application/octet-stream");
+            //response.setContentLengthLong(new File(item.getPath()).length());
+           // response.setHeader("Content-Disposition", "attachment;filename=1.mp4");
+            OutputStream out = response.getOutputStream();
+            byte[] buffer = new byte[1024];
+            int read = 0;
+            while ((read = in.read(buffer)) != -1) {
+                out.write(buffer, 0, read);
+            }
+            in.close();
+            return Result.success(null);
+        }
     }
 }
