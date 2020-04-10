@@ -35,4 +35,8 @@ public class UserService {
     public User findById(Integer id){
         return repository.getOne(id);
     }
+
+    public User login(String username,String password){
+        return repository.findByUsernameAndPassword(username,password);
+    }
 }

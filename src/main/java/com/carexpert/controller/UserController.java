@@ -3,6 +3,7 @@ package com.carexpert.controller;
 import com.carexpert.common.CommonUtil;
 import com.carexpert.common.PageVO;
 import com.carexpert.common.Result;
+import com.carexpert.common.UserVo;
 import com.carexpert.dao.UserRepository;
 import com.carexpert.entity.User;
 import com.carexpert.service.UserService;
@@ -63,5 +64,57 @@ public class UserController {
         mv.addObject("util", new CommonUtil());
         mv.setViewName("info");
         return mv;
+    }
+
+    @RequestMapping("/user/login")
+    public Result login(String username,String password){
+        User user = service.login(username, password);
+        if (user == null){
+            return Result.fail("wrong username or password");
+        }else {
+            UserVo vo = new UserVo();
+            vo.setId(user.getId());
+            vo.setUsername(user.getUsername());
+            vo.setPermission(user.getPermission());
+            return Result.success(vo);
+        }
+    }
+
+    @RequestMapping("/user/reset")
+    public Result reset(Integer id,String password){
+        User user = service.findById(id);
+        if (user != null){
+            user.setPassword(password);
+            service.save(user);
+            return Result.success(null);
+        }else {
+            return Result.fail("no such user");
+        }
+    }
+
+    @RequestMapping("/user/phone")
+    public Result phone(Integer id,String phone){
+        User user = service.findById(id);
+        if (user != null){
+            user.setPhone(phone);
+            service.save(user);
+            return Result.success(null);
+        }else {
+            return Result.fail("no such user");
+        }
+    }
+
+    @RequestMapping("/code/{id}")
+    public Result phone(@PathVariable Integer id){
+        String code = "";
+        User user = service.findById(id);
+        if (user != null){
+            String phone = user.getPhone();
+            //send code
+            //add to cache
+            return Result.success(null);
+        }else {
+            return Result.fail("no such user");
+        }
     }
 }
