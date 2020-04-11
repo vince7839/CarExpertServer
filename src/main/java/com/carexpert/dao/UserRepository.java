@@ -11,5 +11,5 @@ import java.util.List;
 @Repository
 public interface UserRepository extends JpaRepository<User,Integer> {
     Page<User> findByType(Integer type, Pageable pageable);
-    User findByUsernameAndPassword(String username,String password);
+    User findByUsername(String username);
 }

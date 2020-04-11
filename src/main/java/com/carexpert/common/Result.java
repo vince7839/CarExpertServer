@@ -17,6 +17,7 @@ public class Result {
     public static Result fail(String msg){
         Result r = new Result();
         r.msg = msg;
+        r.state = 500;
         return r;
     }
 

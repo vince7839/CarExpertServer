@@ -31,7 +31,7 @@ public class UserController {
 
     @RequestMapping("/user/page/{page}")
     @ResponseBody
-    public PageVO page(@PathVariable Integer page) {
+    public PageVO page(@PathVariable Integer page) throws Exception {
         Page<User> result = service.findByPage(page);
         System.out.println("" + result.getNumber() + " " + result.getNumberOfElements());
         PageVO vo = new PageVO();
@@ -43,7 +43,7 @@ public class UserController {
 
     @RequestMapping("/user/save")
     @ResponseBody
-    public Result add(User user, int[] module) {
+    public Result add(User user, int[] module) throws Exception {
         System.out.println("user save" + user + " " + Arrays.toString(module));
         int temp = 0;
         if (module != null) {
@@ -51,11 +51,16 @@ public class UserController {
                 temp |= (1 << i);
             }
         }
-        System.out.println(temp);
         user.setPermission(temp);
-        service.save(user);
+        if (user.getId() == null){
+            service.add(user);
+        }else{
+            service.update(user);
+        }
         return Result.success(null);
     }
+
+
 
     @RequestMapping("/user/{id}")
     public ModelAndView add(@PathVariable Integer id, ModelAndView mv) {
@@ -67,9 +72,11 @@ public class UserController {
     }
 
     @RequestMapping("/user/login")
+    @ResponseBody
     public Result login(String username,String password){
-        User user = service.login(username, password);
-        if (user == null){
+        System.out.println("login:"+username+" "+password);
+        User user = service.findByUsername(username);
+        if (user == null || !password.equals(user.getPassword())){
             return Result.fail("wrong username or password");
         }else {
             UserVo vo = new UserVo();
@@ -81,11 +88,12 @@ public class UserController {
     }
 
     @RequestMapping("/user/reset")
-    public Result reset(Integer id,String password){
+    @ResponseBody
+    public Result reset(Integer id,String password) throws Exception {
         User user = service.findById(id);
         if (user != null){
             user.setPassword(password);
-            service.save(user);
+            service.update(user);
             return Result.success(null);
         }else {
             return Result.fail("no such user");
@@ -93,11 +101,12 @@ public class UserController {
     }
 
     @RequestMapping("/user/phone")
-    public Result phone(Integer id,String phone){
+    @ResponseBody
+    public Result phone(Integer id,String phone) throws Exception {
         User user = service.findById(id);
         if (user != null){
             user.setPhone(phone);
-            service.save(user);
+            service.update(user);
             return Result.success(null);
         }else {
             return Result.fail("no such user");
@@ -105,6 +114,7 @@ public class UserController {
     }
 
     @RequestMapping("/code/{id}")
+    @ResponseBody
     public Result phone(@PathVariable Integer id){
         String code = "";
         User user = service.findById(id);
