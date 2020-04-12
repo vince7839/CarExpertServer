@@ -1,15 +1,19 @@
 package com.carexpert.service;
 
 import com.carexpert.common.CommonType;
+import com.carexpert.common.CommonUtil;
+import com.carexpert.common.FileVO;
 import com.carexpert.common.NodeVO;
 import com.carexpert.dao.ItemRepository;
 import com.carexpert.entity.Item;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ItemService {
@@ -60,9 +64,8 @@ public class ItemService {
         List<Item> children = findByParent(id);
         if (children.isEmpty()){
             Item target = repository.getOne(id);
-            if (target.getPath() != null){
-                File file = new File(target.getPath());
-                file.delete();
+            if (target.getLevel() == CommonType.ITEM_LEVEL_FILE){
+                CommonUtil.deleteFile(target);
             }
             repository.deleteById(id);
         }else {
@@ -72,9 +75,13 @@ public class ItemService {
         }
     }
 
-    public List<NodeVO> getNodeList(Integer top){
+    public List<NodeVO> getNodeList(Integer moduleFlag){
+        Item module = repository.findByFlag(moduleFlag);
+        if (module == null){
+            return null;
+        }
         List<NodeVO> list = new ArrayList<>();
-        List<Item> ones = repository.findByParent(top);
+        List<Item> ones = repository.findByParent(module.getId());
         for (Item i:ones){
             NodeVO node = new NodeVO();
             List<Item> children = repository.findByParent(i.getId());
@@ -83,5 +90,56 @@ public class ItemService {
             list.add(node);
         }
         return list;
+    }
+
+    public List<FileVO> getFileList(Integer parent,String type){
+        List<Item> items = findFile(parent,type);
+        List<FileVO> list = new ArrayList<>();
+        for(Item item:items){
+            FileVO f = new FileVO();
+            f.setName(item.getName());
+            f.setTag(item.getTag());
+            f.setHeat(item.getHeat());
+            if (CommonType.ITEM_TYPE_VIDEO.equals(type)) {
+                f.setHigh(CommonUtil.getVideoUrl(item.getFilename(),CommonType.VIDEO_QUALITY_HIGH));
+                f.setMiddle(CommonUtil.getVideoUrl(item.getFilename(),CommonType.VIDEO_QUALITY_MIDDLE));
+                f.setLow(CommonUtil.getVideoUrl(item.getFilename(),CommonType.VIDEO_QUALITY_LOW));
+            }else {
+                f.setUrl(CommonUtil.getFileUrl(item));
+            }
+            list.add(f);
+        }
+        return list;
+    }
+
+    @PostConstruct
+    public void init(){
+        System.out.println("init");
+        Map<Integer,String> map = new HashMap<>();
+        map.put(1,"汽车电工电子");
+        map.put(2,"汽车使用与维护");
+        map.put(3,"发动机构造与检修");
+        map.put(4,"变速器构造与检修");
+        map.put(5,"汽车动力底盘");
+        map.put(6,"汽车电气空调");
+        map.put(7,"汽车检测与故障诊断");
+        map.put(8,"新能源汽车整车");
+        map.put(9,"新能源汽车拓展");
+        map.put(10,"新能源汽车基础");
+        map.put(11,"新能源汽车电能与管理");
+        map.put(12,"新能源汽车电机与控制");
+        map.put(13,"新能源汽车电气");
+        for(int i=1;i<=13;i++){
+            Item check = repository.findByFlag(i);
+            if (check != null){
+                continue;
+            }
+            Item item = new Item();
+            item.setFlag(i);
+            item.setLevel(CommonType.ITEM_LEVEL_TOP);
+            item.setParent(CommonType.NO_PARENT);
+            item.setName(map.get(i));
+            addItem(item);
+        }
     }
 }

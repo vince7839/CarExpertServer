@@ -31,6 +31,10 @@ public class CommonType {
     public static final int MODULE_FLAG_12 = 1 << 12;
     public static final int MODULE_FLAG_13 = 1 << 13;
 
+    public static final int VIDEO_QUALITY_HIGH = 0;
+    public static final int VIDEO_QUALITY_MIDDLE = 1;
+    public static final int VIDEO_QUALITY_LOW = 2;
+
     public static final String[] documentType = new String[]{".ppt",".pdf"};
     public static final String[] videoType = new String[]{".mp4"};
     public static final String[] imageType = new String[]{".jpg",".jpeg",".png"};

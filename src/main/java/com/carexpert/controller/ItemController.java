@@ -1,10 +1,10 @@
 package com.carexpert.controller;
 
-import com.carexpert.common.CommonType;
-import com.carexpert.common.NodeVO;
-import com.carexpert.common.Result;
+import com.carexpert.common.*;
 import com.carexpert.entity.Item;
+import com.carexpert.entity.Question;
 import com.carexpert.service.ItemService;
+import com.carexpert.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
@@ -29,6 +29,9 @@ public class ItemController {
 
     @Autowired
     ItemService itemService;
+
+    @Autowired
+    QuestionService questionService;
 
     @RequestMapping("/home")
     public ModelAndView home(ModelAndView mv, Integer parent, String type) {
@@ -87,63 +90,70 @@ public class ItemController {
     }
 
     @RequestMapping("/upload")
-    public Result upload(@NotNull Integer parent, @NotNull MultipartFile file) throws Exception {
-        String resource = ClassUtils.getDefaultClassLoader().getResource("").getPath();
-        File dir = new File(resource + "/static");
-        if (!dir.exists()) {
-            dir.mkdirs();
-        }
-        String name = file.getOriginalFilename().toLowerCase();
-        String type = CommonType.getFileType(name);
-        System.out.println("name:" + name);
+    public Result upload(@NotNull Integer parent, @NotNull MultipartFile file, Integer quality) throws Exception {
+        String filename = file.getOriginalFilename().toLowerCase();
+        String type = CommonType.getFileType(filename);
+        System.out.println("upload:" + filename);
         if (type == null) {
-            System.out.println("不支持的格式");
             return Result.fail("不支持的文件格式");
-        } else {
-            File dest = new File(dir.getAbsolutePath(), name);
-            if (dest.exists()) {
-                System.out.println("文件存在");
-                return Result.fail("文件已存在");
-            } else {
-                System.out.println(dest.getName());
-                file.transferTo(dest);
-                Item item = new Item();
-                item.setParent(parent);
-                item.setName(name);
-                item.setLevel(CommonType.ITEM_LEVEL_FILE);
-                item.setPath(dest.getAbsolutePath());
-                item.setType(type);
-                itemService.addItem(item);
-            }
         }
+        File dest = new File(CommonUtil.getFilePath(type, filename));
+        if (dest.exists()) {
+            return Result.fail("文件已存在");
+        }
+        System.out.println(dest.getAbsolutePath());
+        file.transferTo(dest);
+        Item item = new Item();
+        item.setParent(parent);
+        item.setLevel(CommonType.ITEM_LEVEL_FILE);
+        item.setName(dest.getName());
+        item.setFilename(dest.getAbsolutePath());
+        item.setType(type);
+        itemService.addItem(item);
         return Result.success(null);
     }
 
-    @RequestMapping("/node/{top}")
+    @RequestMapping("/node/{moduleFlag}")
     @ResponseBody
-    public List<NodeVO> node(@PathVariable Integer top) {
-        List<NodeVO> list = itemService.getNodeList(top);
+    public List<NodeVO> node(@PathVariable Integer moduleFlag) {
+        System.out.println("query node:" + moduleFlag);
+        List<NodeVO> list = itemService.getNodeList(moduleFlag);
         return list;
     }
 
+    @RequestMapping("/content/{itemId}")
+    @ResponseBody
+    public ContentVO content(@PathVariable Integer itemId) {
+        System.out.println("query content:" + itemId);
+        List<FileVO> docList = itemService.getFileList(itemId,CommonType.ITEM_TYPE_DOCUMENT);
+        List<FileVO> videoList = itemService.getFileList(itemId,CommonType.ITEM_TYPE_VIDEO);
+        List<FileVO> imageList = itemService.getFileList(itemId,CommonType.ITEM_TYPE_IMAGE);
+        List<Question> questionList = questionService.findByParent(itemId);
+        ContentVO vo = new ContentVO();
+        vo.setDocument(docList);
+        vo.setVideo(videoList);
+        vo.setImage(imageList);
+        vo.setExam(questionList);
+        return vo;
+    }
 
     @RequestMapping("/video/{id}")
     public Result video(@PathVariable Integer id, HttpServletResponse response) throws Exception {
 
         Item item = itemService.findById(id);
-        System.out.println("video"+item);
+        System.out.println("video" + item);
         if (item == null) {
             return Result.fail("invalid id");
         } else {
             //InputStream in = getClass().getResourceAsStream(item.getPath());
-            InputStream in = new FileInputStream(item.getPath());
+            InputStream in = new FileInputStream(item.getFilename());
             if (in == null) {
                 return Result.fail("file not exist");
             }
             //response.setContentType("video/mp4");
             response.setContentType("application/octet-stream");
             //response.setContentLengthLong(new File(item.getPath()).length());
-           // response.setHeader("Content-Disposition", "attachment;filename=1.mp4");
+            // response.setHeader("Content-Disposition", "attachment;filename=1.mp4");
             OutputStream out = response.getOutputStream();
             byte[] buffer = new byte[1024];
             int read = 0;

@@ -3,7 +3,7 @@ package com.carexpert.common;
 import lombok.Data;
 
 @Data
-public class UserVo {
+public class UserVO {
     Integer id;
     String username;
     Integer permission;

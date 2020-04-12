@@ -3,8 +3,7 @@ package com.carexpert.controller;
 import com.carexpert.common.CommonUtil;
 import com.carexpert.common.PageVO;
 import com.carexpert.common.Result;
-import com.carexpert.common.UserVo;
-import com.carexpert.dao.UserRepository;
+import com.carexpert.common.UserVO;
 import com.carexpert.entity.User;
 import com.carexpert.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,7 +78,7 @@ public class UserController {
         if (user == null || !password.equals(user.getPassword())){
             return Result.fail("wrong username or password");
         }else {
-            UserVo vo = new UserVo();
+            UserVO vo = new UserVO();
             vo.setId(user.getId());
             vo.setUsername(user.getUsername());
             vo.setPermission(user.getPermission());

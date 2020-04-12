@@ -11,4 +11,5 @@ public interface ItemRepository extends JpaRepository<Item,Integer> {
     List<Item> findByParent(Integer parent);
     List<Item> findByParentAndType(Integer parent,String type);
     List<Item> findByLevel(Integer level);
+    Item findByFlag(Integer flag);
 }
