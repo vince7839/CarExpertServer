@@ -10,79 +10,25 @@
 
 <div th:include="navbar.html"></div>
 <div class="layui-col-md4 layui-col-md-offset4" style="margin-top: 3%">
-<div class="layui-tab layui-tab-brief">
-    <ul class="layui-tab-title" style="text-align: center">
-        <li class="layui-this">用户列表</li>
-        <li>添加用户</li>
-    </ul>
-    <div class="layui-tab-content">
-        <div class="layui-tab-item layui-show">
-            <div class="layui-card">
-                <div class="layui-card-body">
-                    <table class="layui-table">
-                        <thead>
-                        <tr>
-                            <th lay-data="{width:100}" style="text-align: center">id</th>
-                            <th lay-data="{width:100}" style="text-align: center">昵称</th>
-                            <th lay-data="{width:100}" style="text-align: center">手机号</th>
-                        </tr>
-                        </thead>
-                        <tbody id="tbody"></tbody>
-                    </table>
-                    <div id="page" style="text-align: center"></div>
-                </div>
-            </div>
-        </div>
-        <div class="layui-tab-item">
-            <div class="layui-card">
-                <div class="layui-card-body">
-                    <form id="form" class="layui-form layui-form-pane" th:action="@{/user/save}">
-                        <div class="layui-form-item">
-                            <label class="layui-form-label">用户名</label>
-                            <div class="layui-input-block">
-                                <input name="username" class="layui-input" required>
-                            </div>
-                        </div>
-                        <div class="layui-form-item">
-                            <label class="layui-form-label">密码</label>
-                            <div class="layui-input-block">
-                                <input name="password" class="layui-input" required>
-                            </div>
-                        </div>
-                        <div class="layui-form-item">
-                            <label class="layui-form-label">手机号</label>
-                            <div class="layui-input-block">
-                                <input name="phone" class="layui-input" required>
-                            </div>
-                        </div>
-                        <div class="layui-form-item layui-form-text">
-                            <label class="layui-form-label">开通模块</label>
-                            <div class="layui-input-block">
-                                <input type="checkbox" name="module" title="模块1" value="1" lay-skin="primary">
-                                <input type="checkbox" name="module" title="模块2" value="2" lay-skin="primary">
-                                <input type="checkbox" name="module" title="模块3" value="3" lay-skin="primary">
-                                <input type="checkbox" name="module" title="模块4" value="4" lay-skin="primary">
-                                <input type="checkbox" name="module" title="模块5" value="5" lay-skin="primary">
-                                <input type="checkbox" name="module" title="模块6" value="6" lay-skin="primary">
-                                <input type="checkbox" name="module" title="模块7" value="7" lay-skin="primary">
-                                <input type="checkbox" name="module" title="模块8" value="8" lay-skin="primary">
-                                <input type="checkbox" name="module" title="模块9" value="9" lay-skin="primary">
-                                <input type="checkbox" name="module" title="模块10" value="10" lay-skin="primary">
-                                <input type="checkbox" name="module" title="模块11" value="11" lay-skin="primary">
-                                <input type="checkbox" name="module" title="模块12" value="12" lay-skin="primary">
-                                <input type="checkbox" name="module" title="模块13" value="13" lay-skin="primary">
-                            </div>
-                        </div>
-                        <div class="layui-form-item" style="text-align: center">
-                            <input type="submit" class="layui-btn" value="添加">
-                        </div>
-                    </form>
-                </div>
-            </div>
+
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <table class="layui-table">
+                <thead>
+                <tr>
+                    <th lay-data="{width:100}" style="text-align: center">id</th>
+                    <th lay-data="{width:100}" style="text-align: center">昵称</th>
+                    <th lay-data="{width:100}" style="text-align: center">手机号</th>
+                </tr>
+                </thead>
+                <tbody id="tbody"></tbody>
+            </table>
+            <div id="page" style="text-align: center"></div>
         </div>
     </div>
+
 </div>
-</div>
+
 </body>
 <script th:src="@{/layui/layui.all.js}"></script>
 <script th:src="@{/js/user.js}"></script>

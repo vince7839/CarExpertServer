@@ -57,11 +57,6 @@ public class ItemController {
         return mv;
     }
 
-    @RequestMapping("/inherit/{parent}")
-    public Result items(@PathVariable Integer parent) {
-        return Result.success(itemService.findByParent(parent));
-    }
-
     @RequestMapping("/item/add")
     public Result add(String name, Integer parent, Integer level) {
         Item item = new Item();
@@ -90,16 +85,17 @@ public class ItemController {
     }
 
     @RequestMapping("/upload")
-    public Result upload(@NotNull Integer parent, @NotNull MultipartFile file, Integer quality) throws Exception {
+    public Result upload(@NotNull Integer parent, @NotNull MultipartFile file) throws Exception {
         String filename = file.getOriginalFilename().toLowerCase();
         String type = CommonType.getFileType(filename);
         System.out.println("upload:" + filename);
         if (type == null) {
-            return Result.fail("不支持的文件格式");
+            return Result.fail("不支持的文件格式:"+type);
         }
         File dest = new File(CommonUtil.getFilePath(type, filename));
         if (dest.exists()) {
-            return Result.fail("文件已存在");
+            System.out.println("file exsits");
+            return Result.fail("文件<" + filename + ">已存在");
         }
         System.out.println(dest.getAbsolutePath());
         file.transferTo(dest);
@@ -107,7 +103,7 @@ public class ItemController {
         item.setParent(parent);
         item.setLevel(CommonType.ITEM_LEVEL_FILE);
         item.setName(dest.getName());
-        item.setFilename(dest.getAbsolutePath());
+        item.setFilename(filename);
         item.setType(type);
         itemService.addItem(item);
         return Result.success(null);
@@ -137,7 +133,6 @@ public class ItemController {
         return vo;
     }
 
-    @RequestMapping("/video/{id}")
     public Result video(@PathVariable Integer id, HttpServletResponse response) throws Exception {
 
         Item item = itemService.findById(id);

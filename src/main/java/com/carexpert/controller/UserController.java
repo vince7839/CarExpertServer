@@ -28,11 +28,19 @@ public class UserController {
         return "user";
     }
 
+    @RequestMapping("/user/addnew")
+    public String add() {
+
+        return "add_user";
+    }
+
     @RequestMapping("/user/page/{page}")
     @ResponseBody
     public PageVO page(@PathVariable Integer page) throws Exception {
         Page<User> result = service.findByPage(page);
-        System.out.println("" + result.getNumber() + " " + result.getNumberOfElements());
+        System.out.println("getNumber:" + result.getNumber()
+                + " getNumberOfElements:" + result.getNumberOfElements()
+        + " getTotalElements:" + result.getTotalElements());
         PageVO vo = new PageVO();
         vo.setCount(result.getTotalElements());
         vo.setPage(page);
@@ -42,7 +50,7 @@ public class UserController {
 
     @RequestMapping("/user/save")
     @ResponseBody
-    public Result add(User user, int[] module) throws Exception {
+    public Result save(User user, int[] module) throws Exception {
         System.out.println("user save" + user + " " + Arrays.toString(module));
         int temp = 0;
         if (module != null) {
@@ -62,7 +70,7 @@ public class UserController {
 
 
     @RequestMapping("/user/{id}")
-    public ModelAndView add(@PathVariable Integer id, ModelAndView mv) {
+    public ModelAndView info(@PathVariable Integer id, ModelAndView mv) {
         User user = service.findById(id);
         mv.addObject("user", user);
         mv.addObject("util", new CommonUtil());

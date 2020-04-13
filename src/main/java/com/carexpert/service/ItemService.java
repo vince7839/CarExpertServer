@@ -100,13 +100,7 @@ public class ItemService {
             f.setName(item.getName());
             f.setTag(item.getTag());
             f.setHeat(item.getHeat());
-            if (CommonType.ITEM_TYPE_VIDEO.equals(type)) {
-                f.setHigh(CommonUtil.getVideoUrl(item.getFilename(),CommonType.VIDEO_QUALITY_HIGH));
-                f.setMiddle(CommonUtil.getVideoUrl(item.getFilename(),CommonType.VIDEO_QUALITY_MIDDLE));
-                f.setLow(CommonUtil.getVideoUrl(item.getFilename(),CommonType.VIDEO_QUALITY_LOW));
-            }else {
-                f.setUrl(CommonUtil.getFileUrl(item));
-            }
+            f.setUrl(CommonUtil.getFileUrl(item));
             list.add(f);
         }
         return list;

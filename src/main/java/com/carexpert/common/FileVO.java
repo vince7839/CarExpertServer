@@ -9,7 +9,4 @@ public class FileVO {
     String size;
     String url;
     Integer heat;
-    String high;
-    String middle;
-    String low;
 }
