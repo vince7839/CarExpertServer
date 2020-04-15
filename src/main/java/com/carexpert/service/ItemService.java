@@ -101,6 +101,7 @@ public class ItemService {
             f.setTag(item.getTag());
             f.setHeat(item.getHeat());
             f.setUrl(CommonUtil.getFileUrl(item));
+            f.setCover(CommonUtil.getCoverUrl(item.getCover()));
             list.add(f);
         }
         return list;

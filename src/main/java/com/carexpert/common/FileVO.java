@@ -8,5 +8,6 @@ public class FileVO {
     String tag;
     String size;
     String url;
+    String cover;
     Integer heat;
 }

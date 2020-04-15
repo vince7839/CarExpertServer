@@ -62,6 +62,10 @@ public class CommonUtil {
         return path;
     }
 
+    public static String getCoverUrl(String filename){
+        return "http://localhost:8080/carexpert/cover/"+filename;
+    }
+
     public static void deleteFile(Item item){
             File file = new File(getFilePath(item.getType(),item.getFilename()));
             file.deleteOnExit();

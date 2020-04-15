@@ -23,4 +23,5 @@ public class Item {
     Integer flag;//表示在权限int数中占第几个bit
     String tag;
     Integer heat;
+    String cover;
 }
