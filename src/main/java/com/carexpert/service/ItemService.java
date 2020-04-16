@@ -8,6 +8,7 @@ import com.carexpert.dao.ItemRepository;
 import com.carexpert.entity.Item;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.util.StringUtils;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
@@ -99,7 +100,13 @@ public class ItemService {
             FileVO f = new FileVO();
             f.setName(item.getName());
             f.setTag(item.getTag());
+            if(StringUtils.isEmpty(f.getTag())){
+                f.setTag("基础");
+            }
             f.setHeat(item.getHeat());
+            if(f.getHeat() == null){
+                f.setHeat(100);
+            }
             f.setUrl(CommonUtil.getFileUrl(item));
             f.setCover(CommonUtil.getCoverUrl(item.getCover()));
             list.add(f);

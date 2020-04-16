@@ -37,16 +37,16 @@ public class ExamController {
             Integer builder = 0;
             for (String item:answers) {
                 if ("A".equals(item)){
-                    builder = builder | 0x01;
+                    builder = builder | 0x1;
                 }
                 if ("B".equals(item)){
-                    builder = builder | 0x10;
+                    builder = builder | (0x1 << 1);
                 }
                 if ("C".equals(item)){
-                    builder = builder | 0x100;
+                    builder = builder | ( 0x1 << 2);
                 }
                 if ("D".equals(item)){
-                    builder = builder | 0x1000;
+                    builder = builder | (0x1 << 3);
                 }
             }
             System.out.println("answer:"+builder);
