@@ -109,6 +109,7 @@ public class ItemService {
             }
             f.setUrl(CommonUtil.getFileUrl(item));
             f.setCover(CommonUtil.getCoverUrl(item.getCover()));
+            f.setType(item.getType());
             list.add(f);
         }
         return list;

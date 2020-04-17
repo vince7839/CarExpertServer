@@ -9,7 +9,7 @@
 <body>
 <div th:include="navbar.html"></div>
 <div class="layui-card layui-col-md4 layui-col-md-offset4" style="text-align: center;background: #eeeeee;margin-top:1%">
-    <div class="layui-card-header">目录222</div>
+    <div class="layui-card-header">目录334</div>
 <!--    <div class="layui-row" th:if="${level} == 3 and ${type} eq null">-->
 <!--        <i class="layui-icon layui-icon-file" style="font-size: 20px"></i>-->
 <!--        <a style="color: blue;text-decoration: underline;font-size: 20px"-->
@@ -42,8 +42,8 @@
                     class="layui-icon layui-icon-edit" th:onclick="|editItem(${item.id})|"></button>
             <button th:if="${level} != 0"
                     class="layui-icon layui-icon-delete" th:onclick="|deleteItem(${item.id})|"></button>
-            <button th:if="${type} == 'video'"
-                    class="layui-icon layui-icon-upload" th:on th:onclick="|uploadCover(${item.id})|"></button>
+            <button th:if="${type} == 'video' or ${type} == 'document'"
+                    class="layui-icon layui-icon-upload" th:onclick="|uploadCover(${item.id})|">上传封面</button>
         </div>
     </div>
     <div class="layui-card-body" th:if="${level} == 1 or ${level} == 2">
@@ -54,7 +54,7 @@
         <i id="loading" style="visibility: hidden" class="layui-icon layui-icon-loading layui-icon layui-anim layui-anim-rotate layui-anim-loop"></i>
         <span id="process"></span>
     </div>
-
+<button id="coverBtn" hidden></button>
 </div>
 </body>
 <input type="hidden" id="parent" th:value="${parent}">
@@ -144,5 +144,30 @@
             $('#process').text(n)
         }
     });
+
+    var coverElem = layui.upload.render({
+        elem: '#coverBtn'
+        , url: '/carexpert/upload'
+        , exts: 'jpg|jpeg|png'
+        ,done:function (res, index, upload) {
+            if (res.state != 200) {
+                alert(res.msg)
+            }else {
+                alert('上传成功')
+            }
+        }
+        ,error: function () {
+            alert('上传失败')
+            window.location.reload()
+        }
+    });
+
+    function uploadCover(id){
+        console.log('111111')
+        coverElem.reload({
+            data: {id: id,op: 'cover'}
+        });
+        $('#coverBtn').click();
+    }
 </script>
 </html>

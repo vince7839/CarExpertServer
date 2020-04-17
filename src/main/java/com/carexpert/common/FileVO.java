@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class FileVO {
+    String type;
     String name;
     String tag;
     String size;

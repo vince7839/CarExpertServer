@@ -45,13 +45,15 @@ public class CommonUtil {
 
     public static String getFilePath(String type,String filename){
         String base = ClassUtils.getDefaultClassLoader().getResource("").getPath()+"/static";
-        String prefix;
+        String prefix = "";
         if (CommonType.ITEM_TYPE_DOCUMENT.equals(type)){
             prefix = "/document";
         }else if (CommonType.ITEM_TYPE_IMAGE.equals(type)){
             prefix = "/image";
-        }else {
+        }else if (CommonType.ITEM_TYPE_VIDEO.equals(type)){
             prefix = "/video";
+        }else if ("cover".equals(type)){
+            prefix = "/cover";
         }
         File targetDir = new File(base,prefix);
         if (!targetDir.exists()) {
@@ -63,6 +65,9 @@ public class CommonUtil {
     }
 
     public static String getCoverUrl(String filename){
+        if (StringUtils.isEmpty(filename)) {
+            return "";
+        }
         return "http://localhost:8080/carexpert/cover/"+filename;
     }
 

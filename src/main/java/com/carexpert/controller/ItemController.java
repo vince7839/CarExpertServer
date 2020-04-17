@@ -85,9 +85,9 @@ public class ItemController {
     }
 
     @RequestMapping("/upload")
-    public Result upload(@NotNull Integer parent, @NotNull MultipartFile file) throws Exception {
+    public Result upload(@NotNull Integer parent, @NotNull MultipartFile file,String op,Integer id) throws Exception {
         String filename = file.getOriginalFilename().toLowerCase();
-        String type = CommonType.getFileType(filename);
+        String type = "cover".equals(op) ? "cover" : CommonType.getFileType(filename);
         System.out.println("upload:" + filename);
         if (type == null) {
             return Result.fail("不支持的文件格式:"+type);
@@ -99,13 +99,22 @@ public class ItemController {
         }
         System.out.println(dest.getAbsolutePath());
         file.transferTo(dest);
-        Item item = new Item();
-        item.setParent(parent);
-        item.setLevel(CommonType.ITEM_LEVEL_FILE);
-        item.setName(dest.getName());
-        item.setFilename(filename);
-        item.setType(type);
-        itemService.addItem(item);
+        if("cover".equals(op)){
+           Item item = itemService.findById(id);
+           if (item != null){
+               item.setCover(filename);
+               itemService.save(item);
+           }
+        }else{
+            Item item = new Item();
+            item.setParent(parent);
+            item.setLevel(CommonType.ITEM_LEVEL_FILE);
+            item.setName(dest.getName());
+            item.setFilename(filename);
+            item.setType(type);
+            itemService.addItem(item);
+        }
+
         return Result.success(null);
     }
 
