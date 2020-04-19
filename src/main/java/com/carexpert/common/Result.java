@@ -7,6 +7,13 @@ public class Result {
     int state;
     String msg;
     Object data;
+    public final static Result SUCCESS = new Result();
+    public final static Result FAIL = new Result();
+
+    static {
+        SUCCESS.state = 200;
+        FAIL.state = 500;
+    }
 
     public static Result fail(int code){
         Result r = new Result();

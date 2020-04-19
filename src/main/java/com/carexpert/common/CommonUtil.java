@@ -1,7 +1,9 @@
 package com.carexpert.common;
 
 import com.carexpert.entity.Item;
+import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.util.ClassUtils;
+import org.springframework.util.ResourceUtils;
 import org.springframework.util.StringUtils;
 
 import java.io.File;
@@ -74,5 +76,23 @@ public class CommonUtil {
     public static void deleteFile(Item item){
             File file = new File(getFilePath(item.getType(),item.getFilename()));
             file.deleteOnExit();
+    }
+
+    public static String getUniqueFilename(String filename){
+        File file = new File(filename);
+        System.out.println("file exists:"+file.exists());
+        int last = filename.lastIndexOf(".");
+        String prefix = filename.substring(0,last);
+        String ext = filename.substring(filename.lastIndexOf("."));
+        int i = 1;
+        String temp = filename;
+        System.out.println("prefix:"+prefix+" ext:" + ext);
+        while(file.exists()){
+            temp = prefix + "(" + i + ")" + ext;
+            System.out.println("try:"+temp);
+            file = new File(temp);
+            i++;
+        }
+        return temp;
     }
 }

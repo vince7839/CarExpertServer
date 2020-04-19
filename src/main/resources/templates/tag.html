@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}">
+    <script type="text/javascript" th:src="@{/js/jquery-3.4.1.min.js}"></script>
+</head>
+<body bgcolor="#eeeeee">
+<div th:include="navbar.html"></div>
+<div class="layui-card layui-col-md6 layui-col-md-offset3" style="margin-top:1%">
+    <div class="layui-card-header" style="text-align: center">所有标签</div>
+
+    <div class="layui-card-body">
+        <button class="layui-btn layui-btn-warm layui-btn-radius" style="margin: 5px"
+                th:each="tag :${tags}" th:onclick="|deleteTag(${tag.id})|">
+            <span th:text="${tag.name}"></span>
+            <i class="layui-icon layui-icon-close"></i>
+        </button>
+    </div>
+
+    <div class="layui-card-body">
+        <form id="form" class="layui-form layui-form-pane">
+            <div class="layui-form-item">
+                <label class="layui-form-label">名称</label>
+                <div class="layui-input-block">
+                    <input name="name" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item" style="text-align: center">
+                <input class="layui-btn" type="submit" value="添加">
+            </div>
+        </form>
+    </div>
+
+</div>
+</body>
+<script type="text/javascript" th:src="@{/layui/layui.all.js}"></script>
+<script>
+    function deleteTag(id) {
+        console.log(id)
+        var url = '/carexpert/tag/delete/' + id;
+        $.get(url, function (res) {
+            if (res.state == 200) {
+                alert('删除成功')
+                window.location.reload()
+            } else {
+                alert('删除失败：' + res.msg)
+            }
+        })
+    }
+
+    $("#form").submit(function () {
+        $.post("/carexpert/tag/add", $("#form").serialize(), function (data) {
+            if (data.state == 200) {
+                alert("添加成功")
+                window.location.reload();
+            } else {
+                alert("添加失败：" + data.msg)
+            }
+        })
+        return false;
+    })
+</script>
+</html>

@@ -9,7 +9,7 @@
 <body>
 <div th:include="navbar.html"></div>
 <div class="layui-card layui-col-md4 layui-col-md-offset4" style="text-align: center;background: #eeeeee;margin-top:1%">
-    <div class="layui-card-header">目录334</div>
+    <div class="layui-card-header">目录</div>
 <!--    <div class="layui-row" th:if="${level} == 3 and ${type} eq null">-->
 <!--        <i class="layui-icon layui-icon-file" style="font-size: 20px"></i>-->
 <!--        <a style="color: blue;text-decoration: underline;font-size: 20px"-->
@@ -30,14 +30,16 @@
 <!--        <a style="color: blue;text-decoration: underline;font-size: 20px"-->
 <!--           th:href="@{/exam(parent=${parent})}">测评</a>-->
     <div  th:if="${level} == 3 and ${type} eq null" th:include="directory.html"></div>
-    </div>
+
     <div class="layui-card-body" th:each="item:${items}">
         <div class="layui-row" style="text-align:left; margin-left: 40%">
             <i class="layui-icon layui-icon-component" style="font-size: 20px"></i>
-            <a th:if="${type} eq null"
+            <a th:if="${type} == null"
                style="font-size: 20px;color: blue;text-decoration: underline"
                th:text="${item.name}" th:href="@{/home(parent=${item.id})}"></a>
-            <span th:if="${type} ne null" style="font-size: 20px" th:text="${item.name}"></span>
+            <a th:if="${type} != null"
+               style="font-size: 20px;color: blue;text-decoration: underline"
+               th:text="${item.name}" th:href="@{|/detail/${item.id}|}"></a>
             <button th:if="${level} != 0 and ${type} eq null"
                     class="layui-icon layui-icon-edit" th:onclick="|editItem(${item.id})|"></button>
             <button th:if="${level} != 0"
@@ -46,6 +48,7 @@
                     class="layui-icon layui-icon-upload" th:onclick="|uploadCover(${item.id})|">上传封面</button>
         </div>
     </div>
+
     <div class="layui-card-body" th:if="${level} == 1 or ${level} == 2">
         <button class="layui-icon layui-icon-add-1" th:onclick="|addItem(${parent},${level})|">添加</button>
     </div>

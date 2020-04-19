@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}">
+    <script type="text/javascript" th:src="@{/js/jquery-3.4.1.min.js}"></script>
+</head>
+<body bgcolor="#eeeeee">
+<div th:include="navbar.html"></div>
+<div class="layui-card layui-col-md6 layui-col-md-offset3" style="text-align: center;margin-top:1%">
+    <div class="layui-card-header" style="text-align: center">标题封面设置</div>
+    <div class="layui-card-body">
+        <div class="layui-form-item">
+            <label class="layui-row">封面</label>
+            <img th:if="${cover == null}" th:src="@{/none_cover.png}" style="width: 200px;height: 200px;">
+            <img th:if="${cover != null}" th:src="${cover}" style="width: 200px;height: 200px;">
+        </div>
+        <form id="form" class="layui-form layui-form-pane" method="post" th:action="@{/detail/save}">
+            <input type="hidden" name="id" th:value="${id}">
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">标题</label>
+                <div class="layui-input-block">
+                    <input type="text" name="name" required class="layui-input" th:value="${name}">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">标签</label>
+                <div class="layui-input-block">
+                    <select id="tag_select" lay-filter="tag_filter">
+                        <option th:each="tag :${allTags}" th:value="${tag.name}" th:text="${tag.name}"></option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div id="tag_box" class="layui-input-block" style="text-align: left">
+                    <button class="layui-btn layui-btn-radius" th:each="t :${tags}" onclick="onTagClick(this)">
+                        <span th:text="${t}"></span>
+                        <i class="layui-icon layui-icon-close"></i>
+                        <input type="hidden" name="tags" th:value="${t}">
+                    </button>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                    <input id="btn_submit" type="submit" class="layui-btn" th:value="保存"/>
+            </div>
+
+        </form>
+    </div>
+</div>
+</div>
+</body>
+<script type="text/javascript" th:src="@{/layui/layui.all.js}"></script>
+<script>
+    layui.form.on('select(tag_filter)', function (data) {
+        if ($("#tag_box").children().length >= 3) {
+            alert('最多添加3个标签')
+            return;
+        }
+        $("#tag_box").append("<button class='layui-btn layui-btn-radius' onclick='onTagClick(this)'>" +
+            data.value +
+            "<i class='layui-icon layui-icon-close'></i>" +
+            "<input type='hidden' name='tags' value='" + data.value + "'>" +
+            "</button>")
+
+    })
+
+    $("#form").submit(function () {
+        console.log($("#form").serialize())
+        $.post("/carexpert/detail/save", $("#form").serialize(), function (data) {
+            if (data.state == 200) {
+                alert("保存成功")
+                window.location.reload();
+            } else {
+                alert("保存失败：" + data.msg)
+            }
+        })
+        return false;
+    })
+
+    function onTagClick(tag) {
+        $(tag).remove();
+    }
+</script>
+</html>

@@ -1,6 +1,7 @@
 package com.carexpert.controller;
 
 import com.carexpert.common.*;
+import com.carexpert.dao.TagRepository;
 import com.carexpert.entity.Item;
 import com.carexpert.entity.Question;
 import com.carexpert.service.ItemService;
@@ -17,12 +18,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Properties;
 
 @RestController
 public class ItemController {
@@ -32,6 +32,9 @@ public class ItemController {
 
     @Autowired
     QuestionService questionService;
+
+    @Autowired
+    TagRepository tagRepository;
 
     @RequestMapping("/home")
     public ModelAndView home(ModelAndView mv, Integer parent, String type) {
@@ -85,27 +88,28 @@ public class ItemController {
     }
 
     @RequestMapping("/upload")
-    public Result upload(@NotNull Integer parent, @NotNull MultipartFile file,String op,Integer id) throws Exception {
-        String filename = file.getOriginalFilename().toLowerCase();
+    public Result upload(@NotNull Integer parent, @NotNull MultipartFile file, String op, Integer id) throws Exception {
+        String filename = file.getOriginalFilename().toLowerCase().trim();
         String type = "cover".equals(op) ? "cover" : CommonType.getFileType(filename);
         System.out.println("upload:" + filename);
         if (type == null) {
-            return Result.fail("不支持的文件格式:"+type);
+            return Result.fail("不支持的文件格式:" + type);
         }
         File dest = new File(CommonUtil.getFilePath(type, filename));
         if (dest.exists()) {
-            System.out.println("file exsits");
-            return Result.fail("文件<" + filename + ">已存在");
+            String uniqueName = CommonUtil.getUniqueFilename(dest.getAbsolutePath());
+            dest = new File(uniqueName);
+            filename = dest.getName();
         }
         System.out.println(dest.getAbsolutePath());
         file.transferTo(dest);
-        if("cover".equals(op)){
-           Item item = itemService.findById(id);
-           if (item != null){
-               item.setCover(filename);
-               itemService.save(item);
-           }
-        }else{
+        if ("cover".equals(op)) {
+            Item item = itemService.findById(id);
+            if (item != null) {
+                item.setCover(filename);
+                itemService.save(item);
+            }
+        } else {
             Item item = new Item();
             item.setParent(parent);
             item.setLevel(CommonType.ITEM_LEVEL_FILE);
@@ -130,9 +134,9 @@ public class ItemController {
     @ResponseBody
     public ContentVO content(@PathVariable Integer itemId) {
         System.out.println("query content:" + itemId);
-        List<FileVO> docList = itemService.getFileList(itemId,CommonType.ITEM_TYPE_DOCUMENT);
-        List<FileVO> videoList = itemService.getFileList(itemId,CommonType.ITEM_TYPE_VIDEO);
-        List<FileVO> imageList = itemService.getFileList(itemId,CommonType.ITEM_TYPE_IMAGE);
+        List<FileVO> docList = itemService.getFileList(itemId, CommonType.ITEM_TYPE_DOCUMENT);
+        List<FileVO> videoList = itemService.getFileList(itemId, CommonType.ITEM_TYPE_VIDEO);
+        List<FileVO> imageList = itemService.getFileList(itemId, CommonType.ITEM_TYPE_IMAGE);
         List<Question> questionList = questionService.findByParent(itemId);
         ContentVO vo = new ContentVO();
         vo.setDocument(docList);
@@ -167,5 +171,98 @@ public class ItemController {
             in.close();
             return Result.success(null);
         }
+    }
+
+    @RequestMapping("/detail/{id}")
+    public ModelAndView detail(@PathVariable Integer id, ModelAndView mv) {
+        Item item = itemService.findById(id);
+        System.out.println("detail:" + item);
+        if (item == null) {
+            mv.setViewName("error");
+        }
+        String type = item.getType();
+        if (CommonType.ITEM_TYPE_VIDEO.equals(type) || CommonType.ITEM_TYPE_DOCUMENT.equals(type)) {
+            List<String> list = new ArrayList<>();
+            if (item.getTag() != null) {
+                list = Arrays.asList(item.getTag().split(","));
+                System.out.println("tag:" + list);
+            }
+            mv.setViewName("detail");
+            mv.addObject("id", id);
+            mv.addObject("cover", CommonUtil.getCoverUrl(item.getCover()));
+            mv.addObject("name", item.getName());
+            mv.addObject("tags", list);
+            mv.addObject("allTags", tagRepository.findAll());
+        } else if (CommonType.ITEM_TYPE_IMAGE.equals(type)) {
+            mv.setViewName("redirect:" + CommonUtil.getFileUrl(item));
+        } else {
+            mv.setViewName("error");
+        }
+        return mv;
+    }
+
+    @RequestMapping("/detail/save")
+    @ResponseBody
+    public Result saveDetail(Integer id, String name, String[] tags) {
+        System.out.println("save detail:" + Arrays.toString(tags));
+        Item item = itemService.findById(id);
+        if (item == null) {
+            return Result.fail("no such id");
+        }
+        item.setName(name);
+        String tag = "";
+        for (String t : tags) {
+            tag = tag + t + ",";
+        }
+        item.setTag(tag);
+        itemService.save(item);
+        return Result.success(null);
+    }
+
+    @RequestMapping("/version")
+    public ModelAndView version(ModelAndView mv) {
+        Properties properties = getProperties();
+        String version = properties.getProperty("version");
+        mv.addObject("version", version);
+        mv.setViewName("version");
+        return mv;
+    }
+
+    @RequestMapping("/publish")
+    public String publish(MultipartFile file, String version) {
+        System.out.println("publish:"+version);
+        String targetPath = ClassUtils.getDefaultClassLoader().getResource("").getPath()+"/static/target.exe";
+        File target = new File(targetPath);
+        target.deleteOnExit();
+        String filename = ClassUtils.getDefaultClassLoader().getResource("").getPath()+"/config.properties";
+        try(OutputStream out = new FileOutputStream(filename)) {
+            file.transferTo(target);
+            Properties properties = getProperties();
+            properties.setProperty("version",version);
+            properties.store(out,null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "redirect:/version";
+    }
+
+    public Properties getProperties() {
+        String filename = ClassUtils.getDefaultClassLoader().getResource("").getPath()+"/config.properties";
+        File file = new File(filename);
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        Properties properties = new Properties();
+        try (InputStream in = new FileInputStream(file)) {
+            properties.load(in);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return properties;
     }
 }
