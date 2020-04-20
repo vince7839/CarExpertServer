@@ -7,6 +7,8 @@ import org.springframework.util.ResourceUtils;
 import org.springframework.util.StringUtils;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CommonUtil {
 
@@ -94,5 +96,13 @@ public class CommonUtil {
             i++;
         }
         return temp;
+    }
+
+    public static DirectoryVO buildDirectory(Item item){
+        DirectoryVO vo = new DirectoryVO();
+        vo.setTitle(item.getName());
+        vo.setId(item.getId());
+        vo.setChildren(new ArrayList<DirectoryVO>());
+        return vo;
     }
 }

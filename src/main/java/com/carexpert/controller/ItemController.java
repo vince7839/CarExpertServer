@@ -273,4 +273,37 @@ public class ItemController {
         }
         return properties;
     }
+
+    @RequestMapping("/home2")
+    public ModelAndView home2(ModelAndView mv){
+        mv.setViewName("home2");
+        return mv;
+    }
+
+
+    @RequestMapping("/directory/{moduleFlag}")
+    @ResponseBody
+    public Result directory(@PathVariable Integer moduleFlag){
+        System.out.println("get module directory:"+moduleFlag);
+        Item module = itemService.findByFlag(moduleFlag);
+        if (module == null){
+            return Result.fail("no such module");
+        }
+        Integer moduleId = module.getId();
+        List<Item> oneNodes = itemService.findByParent(moduleId);
+        List<DirectoryVO> result = new ArrayList<>();
+
+        for (Item one:oneNodes){
+            DirectoryVO topDirectory = CommonUtil.buildDirectory(one);
+            List<Item> twoNodes = itemService.findByParent(one.getId());
+            List<DirectoryVO> children = new ArrayList<>();
+            for (Item two:twoNodes){
+                DirectoryVO twoDirectory = CommonUtil.buildDirectory(two);
+                children.add(twoDirectory);
+            }
+            topDirectory.setChildren(children);
+            result.add(topDirectory);
+        }
+        return Result.success(result);
+    }
 }

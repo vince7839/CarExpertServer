@@ -52,6 +52,10 @@ public class ItemService {
         return repository.getOne(id);
     }
 
+    public Item findByFlag(Integer moduleFlag){
+        return repository.findByFlag(moduleFlag);
+    }
+
     public List<Item> findFile(Integer parent,String type){
         return repository.findByParentAndType(parent,type);
     }
