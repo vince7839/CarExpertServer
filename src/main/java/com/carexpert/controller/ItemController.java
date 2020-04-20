@@ -246,6 +246,14 @@ public class ItemController {
         return "redirect:/version";
     }
 
+    @RequestMapping("/vernum")
+    @ResponseBody
+    public Result vernum(){
+        Properties properties = getProperties();
+        String num = properties.getProperty("version");
+        return Result.success(num);
+    }
+
     public Properties getProperties() {
         String filename = ClassUtils.getDefaultClassLoader().getResource("").getPath()+"/config.properties";
         File file = new File(filename);
