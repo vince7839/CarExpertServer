@@ -69,7 +69,7 @@ public class ItemService {
         List<Item> children = findByParent(id);
         if (children.isEmpty()){
             Item target = repository.getOne(id);
-            if (target.getLevel() == CommonType.ITEM_LEVEL_FILE){
+            if (!StringUtils.isEmpty(target.getFilename())){
                 CommonUtil.deleteFile(target);
             }
             repository.deleteById(id);

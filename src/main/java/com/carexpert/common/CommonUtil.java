@@ -1,14 +1,11 @@
 package com.carexpert.common;
 
 import com.carexpert.entity.Item;
-import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.util.ClassUtils;
-import org.springframework.util.ResourceUtils;
 import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 public class CommonUtil {
 
@@ -98,11 +95,12 @@ public class CommonUtil {
         return temp;
     }
 
-    public static DirectoryVO buildDirectory(Item item){
-        DirectoryVO vo = new DirectoryVO();
+    public static TreeNode buildDirectory(Item item){
+        TreeNode vo = new TreeNode();
         vo.setTitle(item.getName());
         vo.setId(item.getId());
-        vo.setChildren(new ArrayList<DirectoryVO>());
+       // vo.setChildren(new ArrayList<TreeNode>());
         return vo;
     }
+
 }

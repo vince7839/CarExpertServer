@@ -62,6 +62,7 @@ public class ItemController {
 
     @RequestMapping("/item/add")
     public Result add(String name, Integer parent, Integer level) {
+        System.out.println("add: parent " + parent + " name " + name);
         Item item = new Item();
         item.setName(name);
         item.setLevel(level);
@@ -230,16 +231,16 @@ public class ItemController {
 
     @RequestMapping("/publish")
     public String publish(MultipartFile file, String version) {
-        System.out.println("publish:"+version);
-        String targetPath = ClassUtils.getDefaultClassLoader().getResource("").getPath()+"/static/target.exe";
+        System.out.println("publish:" + version);
+        String targetPath = ClassUtils.getDefaultClassLoader().getResource("").getPath() + "/static/target.exe";
         File target = new File(targetPath);
         target.deleteOnExit();
-        String filename = ClassUtils.getDefaultClassLoader().getResource("").getPath()+"/config.properties";
-        try(OutputStream out = new FileOutputStream(filename)) {
+        String filename = ClassUtils.getDefaultClassLoader().getResource("").getPath() + "/config.properties";
+        try (OutputStream out = new FileOutputStream(filename)) {
             file.transferTo(target);
             Properties properties = getProperties();
-            properties.setProperty("version",version);
-            properties.store(out,null);
+            properties.setProperty("version", version);
+            properties.store(out, null);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -248,14 +249,14 @@ public class ItemController {
 
     @RequestMapping("/vernum")
     @ResponseBody
-    public Result vernum(){
+    public Result vernum() {
         Properties properties = getProperties();
         String num = properties.getProperty("version");
         return Result.success(num);
     }
 
     public Properties getProperties() {
-        String filename = ClassUtils.getDefaultClassLoader().getResource("").getPath()+"/config.properties";
+        String filename = ClassUtils.getDefaultClassLoader().getResource("").getPath() + "/config.properties";
         File file = new File(filename);
         if (!file.exists()) {
             try {
@@ -274,36 +275,66 @@ public class ItemController {
         return properties;
     }
 
-    @RequestMapping("/home2")
-    public ModelAndView home2(ModelAndView mv){
+    @RequestMapping("/module/{moduleFlag}")
+    public ModelAndView home2(@PathVariable Integer moduleFlag, ModelAndView mv) {
+        Integer moduleId = itemService.findByFlag(moduleFlag).getId();
         mv.setViewName("home2");
+        mv.addObject("moduleId", moduleId);
         return mv;
     }
 
+    @RequestMapping("/directory/{id}")
+    public ModelAndView directory(@PathVariable Integer id,ModelAndView mv){
+        mv.addObject("parent",id);
+        mv.setViewName("directory2");
+        return mv;
+    }
 
-    @RequestMapping("/directory/{moduleFlag}")
+    @RequestMapping("/tree/{moduleFlag}")
     @ResponseBody
-    public Result directory(@PathVariable Integer moduleFlag){
-        System.out.println("get module directory:"+moduleFlag);
+    public Result directory(@PathVariable Integer moduleFlag) {
+        System.out.println("get module directory:" + moduleFlag);
+        Integer k = null;
         Item module = itemService.findByFlag(moduleFlag);
-        if (module == null){
+        if (module == null) {
             return Result.fail("no such module");
         }
         Integer moduleId = module.getId();
         List<Item> oneNodes = itemService.findByParent(moduleId);
-        List<DirectoryVO> result = new ArrayList<>();
+        List<TreeNode> result = buildTree(moduleId);
+        //  List<TreeNode> result = new ArrayList<>();
 
-        for (Item one:oneNodes){
-            DirectoryVO topDirectory = CommonUtil.buildDirectory(one);
-            List<Item> twoNodes = itemService.findByParent(one.getId());
-            List<DirectoryVO> children = new ArrayList<>();
-            for (Item two:twoNodes){
-                DirectoryVO twoDirectory = CommonUtil.buildDirectory(two);
-                children.add(twoDirectory);
-            }
-            topDirectory.setChildren(children);
-            result.add(topDirectory);
-        }
+//        for (Item one : oneNodes) {
+//            TreeNode topDirectory = CommonUtil.buildDirectory(one);
+//            List<Item> twoNodes = itemService.findByParent(one.getId());
+//            List<TreeNode> children = new ArrayList<>();
+//            for (Item two : twoNodes) {
+//                TreeNode twoDirectory = CommonUtil.buildDirectory(two);
+//                children.add(twoDirectory);
+//            }
+//            topDirectory.setChildren(children);
+//            result.add(topDirectory);
+//        }
         return Result.success(result);
+    }
+
+    private List<TreeNode> buildTree(Integer parent) {
+
+        List<Item> items = itemService.findByParent(parent);
+        List<TreeNode> nodes = new ArrayList<>();
+
+        for (Item item : items) {
+            TreeNode node = new TreeNode();
+            node.setTitle(item.getName());
+            node.setId(item.getId());
+            Integer level = item.getLevel();
+            node.setLevel(level);
+            if (level != null && level < CommonType.ITEM_LEVEL_TWO) {
+                List<TreeNode> childNode = buildTree(item.getId());
+                node.setChildren(childNode);
+            }
+            nodes.add(node);
+        }
+        return nodes;
     }
 }

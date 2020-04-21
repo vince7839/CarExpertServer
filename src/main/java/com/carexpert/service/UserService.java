@@ -19,6 +19,7 @@ public class UserService {
         if (findByUsername(user.getUsername()) != null){
             throw CommonException.EXCEPTION_USERNAME_EXIST;
         }
+        user.setType(CommonType.USER_TYPE_NORMAL);
         repository.save(user);
     }
 

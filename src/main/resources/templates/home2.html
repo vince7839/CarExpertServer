@@ -7,21 +7,95 @@
     <script type="text/javascript" th:src="@{/js/jquery-3.4.1.min.js}"></script>
 </head>
 <body bgcolor="#eeeeee">
-<!--<div th:include="navbar.html"></div>-->
-<div id="tree"></div>
+<input type="hidden" id="moduleId" th:value="${moduleId}">
+<div th:include="navbar.html"></div>
+<div class="layui-col-md8 layui-col-md-offset2" style="text-align: center;margin-top:1%">
+    <div class="layui-row">
+        <button id="addTop" class="layui-btn" th:onclick="|addItem(${moduleId},1)|">添加一级目录</button>
+    </div>
+    <div id="tree"></div>
+
+</div>
+
 </body>
 <script type="text/javascript" th:src="@{/layui/layui.all.js}"></script>
 <script>
-    var url = "/carexpert/directory/1"
+    var moduleId = $("#moduleId").val();
+    var url = "/carexpert/tree/" + moduleId;
     $.get(url, function (res) {
         console.log(res)
         if (res.state == 200) {
             var inst1 = layui.tree.render({
                 elem: '#tree'  //绑定元素
-                ,data:res.data})
-            } else {
+                , edit: ['update', 'del']
+                , data: res.data
+                , click: function (obj) {
+                    console.log(obj.data); //得到当前点击的节点数据
+                    if (obj.data.level == 1) {
+                        addItem(obj.data.id, 2)
+                    } else {
+                        var url = '/carexpert/directory/' + obj.data.id;
+                        window.location.href = url
+                    }
+                }
+                , operate: function (obj) {
+                    var type = obj.type; //得到操作类型：add、edit、del
+                    var data = obj.data; //得到当前节点的数据
+                    var elem = obj.elem; //得到当前节点元素
+
+                    //Ajax 操作
+                    var id = data.id; //得到节点索引
+                    if (type === 'add') { //增加节点
+                        //返回 key 值
+                        return 123;
+                    } else if (type === 'update') { //修改节点
+                        var name = elem.find('.layui-tree-txt').html()
+                        console.log('after:' + name); //得到修改后的内容
+                        renameItem(id, name)
+                    } else if (type === 'del') { //删除节点
+                        deleteItem(id)
+                    }
+                    ;
+                }
+            })
+        } else {
             alert('fail：' + res.msg)
         }
     })
+
+    function addItem(parent, level) {
+        var name = prompt("请输入目录名")
+        if (name != null && name != "") {
+            var url = "/carexpert/item/add";
+            $.get(url, {name: name, parent: parent, level: level},
+                function (response) {
+                    console.log(response);
+                    alert(response.state == 200 ? '创建成功' : '创建失败')
+                    window.location.reload()
+                })
+        } else {
+            alert('名字不能为空！')
+        }
+    }
+
+    function renameItem(id, name) {
+        var url = "/carexpert/item/edit";
+        $.get(url, {name: name, id: id},
+            function (response) {
+                console.log(response);
+                alert(response.state == 200 ? '修改成功' : '修改失败')
+                window.location.reload()
+            })
+    }
+
+    function deleteItem(id) {
+        var url = "/carexpert/item/delete";
+        $.get(url, {id: id},
+            function (response) {
+                console.log(response);
+                alert(response.state == 200 ? '删除成功' : '删除失败')
+                window.location.reload()
+            })
+    }
 </script>
 </html>

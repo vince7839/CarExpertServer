@@ -5,8 +5,9 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class DirectoryVO {
+public class TreeNode {
     String title;
     Integer id;
-    List<DirectoryVO> children;
+    Integer level;
+    List<TreeNode> children;
 }

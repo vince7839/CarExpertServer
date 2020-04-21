@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}">
+    <script type="text/javascript" th:src="@{/js/jquery-3.4.1.min.js}"></script>
+</head>
+<body bgcolor="#eeeeee">
+<div th:include="navbar.html"></div>
+<div class="layui-card layui-col-md8 layui-col-md-offset2" style="text-align: center;margin-top: 1%">
+    <div class="layui-card-header">目录</div>
+    <div class="layui-card-body">
+
+        <div class="layui-row">
+            <i class="layui-icon layui-icon-file" style="font-size: 20px"></i>
+            <a style="color: blue;text-decoration: underline;font-size: 20px"
+               th:href="@{/home(parent=${parent},type='document')}">课件</a>
+        </div>
+        <div class="layui-row">
+            <i class="layui-icon layui-icon-video" style="font-size: 20px"></i>
+            <a style="color: blue;text-decoration: underline;font-size: 20px"
+               th:href="@{/home(parent=${parent},type='video')}">视频</a>
+        </div>
+        <div class="layui-row">
+            <i class="layui-icon layui-icon-picture" style="font-size: 20px"></i>
+            <a style="color: blue;text-decoration: underline;font-size: 20px"
+               th:href="@{/home(parent=${parent},type='image')}">图文</a>
+        </div>
+        <div class="layui-row">
+            <i class="layui-icon layui-icon-survey" style="font-size: 20px"></i>
+            <a style="color: blue;text-decoration: underline;font-size: 20px"
+               th:href="@{/exam(parent=${parent})}">测评</a>
+        </div>
+    </div>
+
+
+</div>
+</body>
+<script type="text/javascript" th:src="@{/layui/layui.all.js}"></script>
+</html>
