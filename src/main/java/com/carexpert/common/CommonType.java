@@ -14,8 +14,8 @@ public class CommonType {
     public static final String ITEM_TYPE_DIRECTORY = "directory";
 
     public static final int USER_TYPE_NORMAL = 100;
-    public static final int USER_TYPE_ADMIN = 101;
-    public static final int USER_TYPE_SUPER = 102;
+    public static final int ADMIN_TYPE_NORMAL = 101;
+    public static final int ADMIN_TYPE_SUPER = 102;
 
     public static final int MODULE_FLAG_1 = 1 << 1;
     public static final int MODULE_FLAG_2 = 1 << 2;

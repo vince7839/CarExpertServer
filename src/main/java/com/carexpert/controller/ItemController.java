@@ -290,16 +290,10 @@ public class ItemController {
         return mv;
     }
 
-    @RequestMapping("/tree/{moduleFlag}")
+    @RequestMapping("/tree/{moduleId}")
     @ResponseBody
-    public Result directory(@PathVariable Integer moduleFlag) {
-        System.out.println("get module directory:" + moduleFlag);
-        Integer k = null;
-        Item module = itemService.findByFlag(moduleFlag);
-        if (module == null) {
-            return Result.fail("no such module");
-        }
-        Integer moduleId = module.getId();
+    public Result directory(@PathVariable Integer moduleId) {
+        System.out.println("get module directory:" + moduleId);
         List<Item> oneNodes = itemService.findByParent(moduleId);
         List<TreeNode> result = buildTree(moduleId);
         //  List<TreeNode> result = new ArrayList<>();

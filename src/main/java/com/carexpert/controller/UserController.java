@@ -52,6 +52,12 @@ public class UserController {
         return vo;
     }
 
+    @RequestMapping("/user/delete/{id}")
+    public Result delete(@PathVariable Integer id) {
+        service.deleteById(id);
+        return Result.SUCCESS;
+    }
+
     @RequestMapping("/user/save")
     @ResponseBody
     public Result save(User user, int[] module) throws Exception {

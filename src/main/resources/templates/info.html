@@ -51,6 +51,7 @@
             </div>
             <div class="layui-form-item" style="text-align: center">
                 <input type="submit" class="layui-btn" value="保存">
+                <button type="button" class="layui-btn" th:onclick="|deleteUser(${user.id})|">删除</button>
             </div>
         </form>
     </div>
@@ -69,5 +70,17 @@
         })
         return false;
     })
+
+    function deleteUser(id) {
+        var url = '/carexpert/user/delete/'+id;
+        $.get(url, function (data) {
+            if (data.state == 200) {
+                alert("删除成功")
+                window.location.href = '/carexpert/admin'
+            } else {
+                alert("删除失败")
+            }
+        })
+    }
 </script>
 </html>

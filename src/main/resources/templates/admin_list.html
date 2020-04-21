@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}">
+    <script type="text/javascript" th:src="@{/js/jquery-3.4.1.min.js}"></script>
+</head>
+<body bgcolor="#eeeeee">
+<div th:include="navbar.html"></div>
+<div class="layui-card layui-col-md9 layui-col-md-offset2" style="margin-top: 1%;height: 700px">
+    <div class="layui-card-header" style="text-align: center">所有管理员</div>
+    <div class="layui-card-body">
+        <table class="layui-table">
+            <thead>
+            <tr>
+                <th lay-data="{width:100}" style="text-align: center">id</th>
+                <th lay-data="{width:100}" style="text-align: center">昵称</th>
+                <th lay-data="{width:100}" style="text-align: center">手机号</th>
+            </tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+        </table>
+        <div id="page" style="text-align: center"></div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" th:src="@{/layui/layui.all.js}"></script>
+<script type="text/javascript" th:src="@{/js/admin.js}"></script>
+</html>

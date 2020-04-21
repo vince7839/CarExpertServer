@@ -9,7 +9,7 @@
 <body bgcolor="#eeeeee">
 <div th:include="navbar.html"></div>
 <div class="layui-card layui-col-md4 layui-col-md-offset4" style="margin-top: 3%">
-    <div class="layui-card-header" style="text-align: center">添加用户</div>
+    <div class="layui-card-header" style="text-align: center">添加管理员</div>
     <div class="layui-card-body">
         <form id="form" class="layui-form layui-form-pane">
             <div class="layui-form-item">
@@ -30,24 +30,6 @@
                     <input name="phone" class="layui-input" required>
                 </div>
             </div>
-            <div class="layui-form-item layui-form-text">
-                <label class="layui-form-label">开通模块</label>
-                <div class="layui-input-block">
-                    <input type="checkbox" name="module" title="模块1" value="1" lay-skin="primary">
-                    <input type="checkbox" name="module" title="模块2" value="2" lay-skin="primary">
-                    <input type="checkbox" name="module" title="模块3" value="3" lay-skin="primary">
-                    <input type="checkbox" name="module" title="模块4" value="4" lay-skin="primary">
-                    <input type="checkbox" name="module" title="模块5" value="5" lay-skin="primary">
-                    <input type="checkbox" name="module" title="模块6" value="6" lay-skin="primary">
-                    <input type="checkbox" name="module" title="模块7" value="7" lay-skin="primary">
-                    <input type="checkbox" name="module" title="模块8" value="8" lay-skin="primary">
-                    <input type="checkbox" name="module" title="模块9" value="9" lay-skin="primary">
-                    <input type="checkbox" name="module" title="模块10" value="10" lay-skin="primary">
-                    <input type="checkbox" name="module" title="模块11" value="11" lay-skin="primary">
-                    <input type="checkbox" name="module" title="模块12" value="12" lay-skin="primary">
-                    <input type="checkbox" name="module" title="模块13" value="13" lay-skin="primary">
-                </div>
-            </div>
             <div class="layui-form-item" style="text-align: center">
                 <input type="submit" class="layui-btn" value="添加">
             </div>
@@ -58,10 +40,10 @@
 <script type="text/javascript" th:src="@{/layui/layui.all.js}"></script>
 <script>
     $("#form").submit(function () {
-        $.post("/carexpert/user/save", $("#form").serialize(), function (data) {
+        $.post("/carexpert/admin/save", $("#form").serialize(), function (data) {
             if (data.state == 200) {
                 alert("添加成功")
-                window.location.href = '/carexpert/user';
+                window.location.href = '/carexpert/admin';
             } else {
                 alert("添加失败："+data.msg)
             }

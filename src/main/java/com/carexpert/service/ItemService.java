@@ -66,18 +66,17 @@ public class ItemService {
 
     //递归删除此目录及其所有子类
     public void deleteRecursively(Integer id){
+        Item target = repository.getOne(id);
         List<Item> children = findByParent(id);
-        if (children.isEmpty()){
-            Item target = repository.getOne(id);
-            if (!StringUtils.isEmpty(target.getFilename())){
-                CommonUtil.deleteFile(target);
-            }
-            repository.deleteById(id);
-        }else {
+        if (!children.isEmpty()){
             for(Item child:children) {
                 deleteRecursively(child.getId());
             }
         }
+        if (!StringUtils.isEmpty(target.getFilename())){
+            CommonUtil.deleteFile(target);
+        }
+        repository.deleteById(id);
     }
 
     public List<NodeVO> getNodeList(Integer moduleFlag){
