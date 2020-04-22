@@ -155,4 +155,20 @@ public class UserController {
             return Result.fail("no such user");
         }
     }
+
+    @RequestMapping("/user2")
+    public String user2(){
+        return "user2";
+    }
+
+    @RequestMapping("/user/list")
+    @ResponseBody
+    public PageVO list(Integer page,Integer limit) throws Exception {
+        Page<User> result = service.findByPage(page);
+        PageVO vo = new PageVO();
+        vo.setCount(result.getTotalElements());
+        vo.setPage(page);
+        vo.setData(result.getContent());
+        return vo;
+    }
 }

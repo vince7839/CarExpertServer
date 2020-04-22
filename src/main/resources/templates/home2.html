@@ -7,14 +7,17 @@
     <script type="text/javascript" th:src="@{/js/jquery-3.4.1.min.js}"></script>
 </head>
 <body bgcolor="#eeeeee">
-<input type="hidden" id="moduleId" th:value="${moduleId}">
+<input type="hidden" id="moduleId" th:value="${module.id}">
 <div th:include="navbar.html"></div>
-<div class="layui-col-md8 layui-col-md-offset2" style="text-align: center;margin-top:1%">
-    <div class="layui-row">
-        <button id="addTop" class="layui-btn" th:onclick="|addItem(${moduleId},1)|">添加一级目录</button>
+<div class="layui-card layui-col-md4 layui-col-md-offset4" style="margin-top:1%">
+    <div class="layui-card-header" style="text-align: center"><h2 th:text="${module.name}"></h2></div>
+    <div class="card layui-card-body">
+        <div style="margin-left: 40%;font-size: 20px" id="tree"></div>
     </div>
-    <div id="tree"></div>
-
+    <div class="card layui-card-body" style="text-align: center">
+        <button id="addTop" class="layui-btn layui-btn-radius layui-btn-warm"
+                th:onclick="|addItem(${module.id},1)|">创建一级目录</button>
+    </div>
 </div>
 
 </body>
@@ -28,6 +31,7 @@
             var inst1 = layui.tree.render({
                 elem: '#tree'  //绑定元素
                 , edit: ['update', 'del']
+                ,showLine: false
                 , data: res.data
                 , click: function (obj) {
                     console.log(obj.data); //得到当前点击的节点数据

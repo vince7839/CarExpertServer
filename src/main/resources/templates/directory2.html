@@ -8,34 +8,74 @@
 </head>
 <body bgcolor="#eeeeee">
 <div th:include="navbar.html"></div>
-<div class="layui-card layui-col-md8 layui-col-md-offset2" style="text-align: center;margin-top: 1%">
-    <div class="layui-card-header">目录</div>
-    <div class="layui-card-body">
+<div class="layui-col-md6 layui-col-lg-offset3" style="margin-top: 15%">
+    <div class="layui-row layui-col-space20">
 
-        <div class="layui-row">
-            <i class="layui-icon layui-icon-file" style="font-size: 20px"></i>
-            <a style="color: blue;text-decoration: underline;font-size: 20px"
-               th:href="@{/home(parent=${parent},type='document')}">课件</a>
+        <div class="layui-col-md3" th:onclick="onCardClick('document')">
+            <div class="layui-card" style="text-align: center;padding: 50px">
+                <i class="layui-icon layui-icon-file" style="font-size: 40px"></i><br>
+                <span>课件</span>
+            </div>
         </div>
-        <div class="layui-row">
-            <i class="layui-icon layui-icon-video" style="font-size: 20px"></i>
-            <a style="color: blue;text-decoration: underline;font-size: 20px"
-               th:href="@{/home(parent=${parent},type='video')}">视频</a>
+
+        <div class="layui-col-md3" th:onclick="onCardClick('video')">
+            <div class="layui-card" style="text-align: center;padding: 50px">
+                <i class="layui-icon layui-icon-video" style="font-size: 40px"></i><br>
+                <span>视频</span>
+            </div>
         </div>
-        <div class="layui-row">
-            <i class="layui-icon layui-icon-picture" style="font-size: 20px"></i>
-            <a style="color: blue;text-decoration: underline;font-size: 20px"
-               th:href="@{/home(parent=${parent},type='image')}">图文</a>
+
+        <div class="layui-col-md3" th:onclick="onCardClick('image')">
+            <div class="layui-card" style="text-align: center;padding: 50px">
+                <i class="layui-icon layui-icon-picture" style="font-size: 40px"></i><br>
+                <span>图文</span>
+            </div>
         </div>
-        <div class="layui-row">
-            <i class="layui-icon layui-icon-survey" style="font-size: 20px"></i>
-            <a style="color: blue;text-decoration: underline;font-size: 20px"
-               th:href="@{/exam(parent=${parent})}">测评</a>
+
+        <div class="layui-col-md3" th:onclick="onCardClick('exam')">
+            <div class="layui-card" style="text-align: center;padding: 50px">
+                <i class="layui-icon layui-icon-survey" style="font-size: 40px"></i><br>
+                <span>测评</span>
+            </div>
         </div>
     </div>
-
-
 </div>
+<!--    <div class="layui-card-body">-->
+
+<!--        <div class="layui-card" style="">-->
+<!--            <i class="layui-icon layui-icon-file" style="font-size: 20px"></i>-->
+<!--            <a style="color: blue;text-decoration: underline;font-size: 20px"-->
+<!--               th:href="@{/home(parent=${parent},type='document')}">课件</a>-->
+<!--        </div>-->
+<!--        <div class="layui-card">-->
+<!--            <i class="layui-icon layui-icon-video" style="font-size: 20px"></i>-->
+<!--            <a style="color: blue;text-decoration: underline;font-size: 20px"-->
+<!--               th:href="@{/home(parent=${parent},type='video')}">视频</a>-->
+<!--        </div>-->
+<!--        <div class="layui-card">-->
+<!--            <i class="layui-icon layui-icon-picture" style="font-size: 20px"></i>-->
+<!--            <a style="color: blue;text-decoration: underline;font-size: 20px"-->
+<!--               th:href="@{/home(parent=${parent},type='image')}">图文</a>-->
+<!--        </div>-->
+<!--        <div class="layui-card">-->
+<!--            <i class="layui-icon layui-icon-survey" style="font-size: 20px"></i>-->
+<!--            <a style="color: blue;text-decoration: underline;font-size: 20px"-->
+<!--               th:href="@{/exam(parent=${parent})}">测评</a>-->
+<!--        </div>-->
+<!--    </div>-->
+
+
 </body>
 <script type="text/javascript" th:src="@{/layui/layui.all.js}"></script>
+<script>
+    function onCardClick(type) {
+        var url
+        if(type == 'exam'){
+            url = '/carexpert/home?parent='+parent+"&type="+type;
+        }else{
+           url = '/carexpert/exam?parent='+parent
+        }
+        window.location.href = url
+    }
+</script>
 </html>

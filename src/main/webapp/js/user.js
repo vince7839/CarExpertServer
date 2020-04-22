@@ -15,7 +15,7 @@ function queryCallback(json) {
     $("#tbody").empty();
     $.each(json.data, function (index, item) {
         console.log(item);
-        var row = "<tr onclick='userQuery("+item.id +")'>"
+        var row = "<tr onclick='userQuery(" + item.id + ")'>"
             + "<td style='text-align: center'>" + item.id + "</td>"
             + "<td style='text-align: center'>" + item.username + "</td>"
             + "<td style='text-align: center'>" + item.phone + "</td>"
@@ -25,7 +25,7 @@ function queryCallback(json) {
 }
 
 function userQuery(id) {
-    window.location.href="/carexpert/user/"+id;
+    window.location.href = "/carexpert/user/" + id;
 }
 
 function refresh(page) {

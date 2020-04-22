@@ -10,4 +10,5 @@ public class PageVO {
     Long count;
     Integer page;
     List data;
+    Integer code = 0;
 }

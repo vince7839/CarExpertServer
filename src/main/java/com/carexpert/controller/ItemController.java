@@ -232,7 +232,7 @@ public class ItemController {
     @RequestMapping("/publish")
     public String publish(MultipartFile file, String version) {
         System.out.println("publish:" + version);
-        String targetPath = ClassUtils.getDefaultClassLoader().getResource("").getPath() + "/static/target.exe";
+        String targetPath = ClassUtils.getDefaultClassLoader().getResource("").getPath() + "/static/CarExpert.exe";
         File target = new File(targetPath);
         target.deleteOnExit();
         String filename = ClassUtils.getDefaultClassLoader().getResource("").getPath() + "/config.properties";
@@ -278,8 +278,9 @@ public class ItemController {
     @RequestMapping("/module/{moduleFlag}")
     public ModelAndView home2(@PathVariable Integer moduleFlag, ModelAndView mv) {
         Integer moduleId = itemService.findByFlag(moduleFlag).getId();
+        Item module = itemService.findById(moduleId);
         mv.setViewName("home2");
-        mv.addObject("moduleId", moduleId);
+        mv.addObject("module", module);
         return mv;
     }
 
