@@ -34,7 +34,7 @@ public class UserService {
     public Page<User> findByPage(int page) throws Exception {
         System.out.println("findByPage:"+page);
         Pageable pageable = PageRequest.of(page,10);
-        Page<User> result = repository.findByType(CommonType.USER_TYPE_NORMAL,pageable);
+        Page<User> result = repository.findAll(pageable);
         //mock data
         if (result.getTotalElements() == 0){
             for (int i=0;i<30;i++){

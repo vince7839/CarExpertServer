@@ -9,6 +9,7 @@
 <body bgcolor="#eeeeee">
 <div th:include="navbar.html"></div>
 <div class="layui-col-md6 layui-col-lg-offset3" style="margin-top: 15%">
+    <input id="parent" type="hidden" th:value="${parent}">
     <div class="layui-row layui-col-space20">
 
         <div class="layui-col-md3" th:onclick="onCardClick('document')">
@@ -69,11 +70,13 @@
 <script type="text/javascript" th:src="@{/layui/layui.all.js}"></script>
 <script>
     function onCardClick(type) {
-        var url
-        if(type == 'exam'){
-            url = '/carexpert/home?parent='+parent+"&type="+type;
+        alert(type)
+        var parent = $("#parent").val();
+        var url;
+        if(type == "exam"){
+            url = '/carexpert/exam?parent='+parent
         }else{
-           url = '/carexpert/exam?parent='+parent
+            url = '/carexpert/home?parent='+parent+"&type="+type;
         }
         window.location.href = url
     }

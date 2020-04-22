@@ -29,7 +29,7 @@ public class UserController {
     @RequestMapping("/user")
     public String user(ModelAndView mv, Integer page) {
 
-        return "user";
+        return "user2";
     }
 
     @RequestMapping("/user/addnew")
@@ -69,6 +69,7 @@ public class UserController {
             }
         }
         user.setPermission(temp);
+        System.out.println("permission:"+temp);
         if (user.getId() == null){
             service.add(user);
         }else{
@@ -79,12 +80,24 @@ public class UserController {
 
 
 
-    @RequestMapping("/user/{id}")
+   // @RequestMapping("/user/{id}")
     public ModelAndView info(@PathVariable Integer id, ModelAndView mv) {
         User user = service.findById(id);
         mv.addObject("user", user);
         mv.addObject("util", new CommonUtil());
         mv.setViewName("info");
+        return mv;
+    }
+
+    @RequestMapping("/user/data")
+    public ModelAndView data(Integer id, ModelAndView mv) {
+        User user = new User();
+        if(id != null) {
+            user = service.findById(id);
+        }
+        mv.addObject("user", user);
+        mv.addObject("util", new CommonUtil());
+        mv.setViewName("user_data");
         return mv;
     }
 

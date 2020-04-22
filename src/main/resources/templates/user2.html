@@ -54,12 +54,20 @@
 
         if(layEvent === 'edit'){ //查看
             layer.open({
-                type: 2
+                 title:"编辑用户"
+                 ,type: 2
                 ,area: ['600px','500px']
-                ,content: ['/carexpert/user/'+data.id,'no']//这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                ,btn:['确定']
+                ,content: '/carexpert/user/data?id='+data.id
+                ,yes:function (index,layero) {
+                    var body = layer.getChildFrame("body", index);
+                    var form = body.find("#form").serialize();
+                    saveUser(form)
+                    console.log(form)
+                }
             });
         } else if(layEvent === 'delete'){ //删除
-            layer.confirm('真的删除行么'+data.id, function(index){
+            layer.confirm('确认删除该用户？', function(index){
                 obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
                 deleteUser(data.id)
                 layer.close(index);
@@ -72,10 +80,30 @@
         var data = obj.data;
         if(obj.event == 'add') {
             layer.open({type: 2,area: ['600px','500px']
-                ,content: '/carexpert/user/addnew'
+                ,title:"添加用户"
+                ,content: '/carexpert/user/data'
+                ,btn:['确定']
+                ,yes:function (index,layero) {
+                    var body = layer.getChildFrame("body", index);
+                    var form = body.find("#form").serialize();
+                    saveUser(form)
+                    console.log(form)
+                }
             });
         }
     });
+
+    function saveUser(data) {
+        $.post("/carexpert/user/save",data, function (data) {
+            console.log(data)
+            if (data.state == 200) {
+                alert("保存成功")
+                window.location.reload();
+            } else {
+                alert("保存失败")
+            }
+        })
+    }
 
     function deleteUser(id) {
         var url = '/carexpert/user/delete/'+id;
