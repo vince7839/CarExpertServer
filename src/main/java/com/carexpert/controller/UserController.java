@@ -177,7 +177,7 @@ public class UserController {
     @RequestMapping("/user/list")
     @ResponseBody
     public PageVO list(Integer page,Integer limit) throws Exception {
-        Page<User> result = service.findByPage(page);
+        Page<User> result = service.findByPage(page-1);
         PageVO vo = new PageVO();
         vo.setCount(result.getTotalElements());
         vo.setPage(page);

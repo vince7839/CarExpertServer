@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpSession;
 
 @Controller
@@ -44,7 +43,7 @@ public class AdminController {
 
     @RequestMapping("/admin")
     public String admin(){
-        return "admin_list";
+        return "admin2";
     }
 
     @RequestMapping("/admin/add")
@@ -83,12 +82,13 @@ public class AdminController {
         return Result.SUCCESS;
     }
 
-    @RequestMapping("/admin/page/{page}")
+    @RequestMapping("/admin/list")
     @ResponseBody
-    public PageVO page(@PathVariable Integer page) throws Exception {
-        Page<Admin> result = service.findByPage(page);
+    public PageVO page(Integer page) throws Exception {
+        Page<Admin> result = service.findByPage(page-1);
         PageVO vo = new PageVO();
         vo.setCount(result.getTotalElements());
+        System.out.println("admin list:"+result.getTotalElements());
         vo.setPage(page);
         vo.setData(result.getContent());
         return vo;
@@ -98,7 +98,18 @@ public class AdminController {
     public ModelAndView info(@PathVariable Integer id, ModelAndView mv) {
         Admin admin = service.findById(id);
         mv.addObject("admin", admin);
-        mv.setViewName("admin_info");
+        mv.setViewName("admin_data");
+        return mv;
+    }
+
+    @RequestMapping("/admin/data")
+    public ModelAndView data(Integer id, ModelAndView mv) {
+        Admin admin = new Admin();
+        if(id != null) {
+            admin = service.findById(id);
+        }
+        mv.addObject("admin", admin);
+        mv.setViewName("admin_data");
         return mv;
     }
 

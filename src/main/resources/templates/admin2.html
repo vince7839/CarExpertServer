@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>用户管理</title>
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}">
+    <script type="text/javascript" th:src="@{/js/jquery-3.4.1.min.js}"></script>
+</head>
+<body>
+<script type="text/html" id="toolbar">
+    <div class="layui-btn-container">
+        <button class="layui-btn" lay-event="add">
+            <i class="layui-icon layui-icon-add-1"></i>新增</button>
+    </div>
+</script>
+<script type="text/html" id="operator">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="edit">
+            <i class="layui-icon layui-icon-edit layui-btn-radius"></i>编辑</button>
+        <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="delete">
+            <i class="layui-icon layui-icon-delete"></i>删除</button>
+    </div>
+</script>
+<div th:include="navbar.html"></div>
+<div style="margin-top: 3%;margin-right: 1%;margin-left: 12%">
+
+
+    <!--        <div class="layui-card-header" style="text-align: center">所有用户</div>-->
+
+    <table class="layui-table" lay-data="{toolbar:'#toolbar',url:'/carexpert/admin/list',height:'full-200'
+        ,defaultToolbar:false,even:true,page:true}" lay-filter="table-filter">
+        <thead>
+        <tr>
+            <th lay-data="{unresize:true,field:'id',align:'center'}">id</th>
+            <th lay-data="{unresize:true,field:'username',align:'center'}">昵称</th>
+            <th lay-data="{unresize:true,field:'phone',align:'center'}">手机号</th>
+            <th lay-data="{unresize:true,toolbar:'#operator',align:'center'}">操作</th>
+        </tr>
+        </thead>
+    </table>
+
+</div>
+
+
+
+</body>
+<script th:src="@{/layui/layui.all.js}"></script>
+<script>
+    //监听工具条
+    layui.table.on('tool(table-filter)', function(obj){ //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+        var data = obj.data; //获得当前行数据
+        var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+        var tr = obj.tr; //获得当前行 tr 的 DOM 对象（如果有的话）
+
+        if(layEvent === 'edit'){ //查看
+            layer.open({
+                 title:"编辑用户"
+                 ,type: 2
+                ,area: ['600px','500px']
+                ,btn:['确定']
+                ,content: '/carexpert/admin/data?id='+data.id
+                ,yes:function (index,layero) {
+                    var body = layer.getChildFrame("body", index);
+                    var form = body.find("#form").serialize();
+                    saveAdmin(form)
+                    console.log(form)
+                }
+            });
+        } else if(layEvent === 'delete'){ //删除
+            layer.confirm('确认删除该用户？', function(index){
+                obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+                deleteAdmin(data.id)
+                layer.close(index);
+                //向服务端发送删除指令
+            });
+        }
+    });
+
+    layui.table.on('toolbar(table-filter)', function(obj){
+        var data = obj.data;
+        if(obj.event == 'add') {
+            layer.open({type: 2,area: ['600px','500px']
+                ,title:"添加用户"
+                ,content: '/carexpert/admin/data'
+                ,btn:['确定']
+                ,yes:function (index,layero) {
+                    var body = layer.getChildFrame("body", index);
+                    var form = body.find("#form").serialize();
+                    saveAdmin(form)
+                    console.log(form)
+                }
+            });
+        }
+    });
+
+    function saveAdmin(data) {
+        $.post("/carexpert/admin/save",data, function (data) {
+            console.log(data)
+            if (data.state == 200) {
+                alert("保存成功")
+                window.location.reload();
+            } else {
+                alert("保存失败")
+            }
+        })
+    }
+
+    function deleteAdmin(id) {
+        var url = '/carexpert/admin/delete/'+id;
+        $.get(url, function (data) {
+            if (data.state == 200) {
+                alert("删除成功")
+                window.location.href = '/carexpert/admin'
+            } else {
+                alert("删除失败")
+            }
+        })
+    }
+</script>
+</html>

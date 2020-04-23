@@ -4,9 +4,11 @@ import com.carexpert.common.*;
 import com.carexpert.dao.TagRepository;
 import com.carexpert.entity.Item;
 import com.carexpert.entity.Question;
+import com.carexpert.entity.User;
 import com.carexpert.service.ItemService;
 import com.carexpert.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -58,6 +60,17 @@ public class ItemController {
         mv.addObject("type", type);
         mv.setViewName("home");
         return mv;
+    }
+
+    @RequestMapping("/file")
+    public PageVO file(Integer page,Integer limit,Integer parent, String type) {
+        Page<Item> result = itemService.findFile(page-1,limit,parent,type);
+        PageVO vo = new PageVO();
+        vo.setCount(result.getTotalElements());
+        vo.setPage(page);
+        vo.setData(result.getContent());
+        return vo;
+
     }
 
     @RequestMapping("/item/add")

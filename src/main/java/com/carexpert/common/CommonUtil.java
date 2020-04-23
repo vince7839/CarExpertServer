@@ -9,6 +9,8 @@ import java.util.ArrayList;
 
 public class CommonUtil {
 
+    public static String HOST = "192.168.8.101";
+
     public static boolean isOptionRight(String option, Integer answer) {
         Integer builder = 0;
         if (StringUtils.isEmpty(answer)){
@@ -35,11 +37,11 @@ public class CommonUtil {
     public static String getFileUrl(Item item){
         String url = "";
         if (CommonType.ITEM_TYPE_DOCUMENT.equals(item.getType())){
-            url = "http://localhost:8080/carexpert/document/"+item.getFilename();
+            url = "http://"+HOST+":8080/carexpert/document/"+item.getFilename();
         }else if(CommonType.ITEM_TYPE_VIDEO.equals(item.getType())){
-            url = "http://localhost:8080/carexpert/video/"+item.getFilename();
+            url = "http://"+HOST+":8080/carexpert/video/"+item.getFilename();
         }else if (CommonType.ITEM_TYPE_IMAGE.equals(item.getType())){
-            url = "http://localhost:8080/carexpert/image/"+item.getFilename();
+            url = "http://"+HOST+":8080/carexpert/image/"+item.getFilename();
         }
         return url;
     }
@@ -69,7 +71,7 @@ public class CommonUtil {
         if (StringUtils.isEmpty(filename)) {
             return "";
         }
-        return "http://localhost:8080/carexpert/cover/"+filename;
+        return "http://"+HOST+":8080/carexpert/cover/"+filename;
     }
 
     public static void deleteFile(Item item){

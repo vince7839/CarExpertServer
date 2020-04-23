@@ -6,7 +6,11 @@ import com.carexpert.common.FileVO;
 import com.carexpert.common.NodeVO;
 import com.carexpert.dao.ItemRepository;
 import com.carexpert.entity.Item;
+import com.carexpert.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.util.StringUtils;
 
@@ -58,6 +62,11 @@ public class ItemService {
 
     public List<Item> findFile(Integer parent,String type){
         return repository.findByParentAndType(parent,type);
+    }
+
+    public Page<Item> findFile(Integer page, Integer limit, Integer parent, String type){
+        Pageable pageable = PageRequest.of(page,10);
+        return repository.findByParentAndType(pageable,parent,type);
     }
 
     public void save(Item item){

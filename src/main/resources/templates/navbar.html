@@ -8,57 +8,59 @@
 <!--</head>-->
 <!--<body>-->
 
-<ul class="layui-nav layui-nav-tree layui-nav-side" lay-filter="test">
-    <!-- 侧边导航: <ul class="layui-nav layui-nav-tree layui-nav-side"> -->
-    <li class="layui-nav-item layui-nav-itemed">
-        <a href="javascript:;">用户管理</a>
-        <dl class="layui-nav-child">
-            <dd><a th:href="@{/user}">用户列表</a></dd>
-        </dl>
-    </li>
-
-    <li class="layui-nav-item">
-        <a>课程管理</a>
-        <dl class="layui-nav-child">
-            <dd><a th:href="@{/module/1}">汽车电工电子</a></dd>
-            <dd><a th:href="@{/module/2}">汽车使用与维护</a></dd>
-            <dd><a th:href="@{/module/3}">发动机构造与检修</a></dd>
-            <dd><a th:href="@{/module/4}">变速器构造与检修</a></dd>
-            <dd><a th:href="@{/module/5}">汽车动力底盘</a></dd>
-            <dd><a th:href="@{/module/6}">汽车电气空调</a></dd>
-            <dd><a th:href="@{/module/7}">汽车检测与故障诊断</a></dd>
-            <dd><a th:href="@{/module/8}">新能源汽车整车</a></dd>
-            <dd><a th:href="@{/module/9}">新能源汽车拓展</a></dd>
-            <dd><a th:href="@{/module/10}">新能源汽车基础</a></dd>
-            <dd><a th:href="@{/module/11}">新能源汽车电能与管理</a></dd>
-            <dd><a th:href="@{/module/12}">新能源汽车电机与控制</a></dd>
-            <dd><a th:href="@{/module/13}">新能源汽车电气</a></dd>
-        </dl>
-    </li>
-
-    <li class="layui-nav-item layui-nav-itemed">
-        <a href="javascript:;">管理员</a>
-        <dl class="layui-nav-child">
-            <dd><a th:href="@{/admin}">列表</a></dd>
-        </dl>
-
-        <dl class="layui-nav-child">
-            <dd><a th:href="@{/admin/add}">新增</a></dd>
-        </dl>
-
-    </li>
-
-    <li class="layui-nav-item layui-nav-itemed">
-        <a href="javascript:;">其他功能</a>
-        <dl class="layui-nav-child">
-            <dd><a th:href="@{/tag}">标签管理</a></dd>
-        </dl>
-        <dl class="layui-nav-child">
-            <dd><a th:href="@{/version}">版本管理</a></dd>
-        </dl>
-    </li>
+<ul class="layui-nav layui-bg-blue" style="text-align: right">
+    <li class="layui-nav-item"> <a href=""><img src="//t.cn/RCzsdCq" class="layui-nav-img">我</a></li>
+    <li class="layui-nav-item"><a href="">退出</a></li>
 </ul>
 
-<!--</body>-->
-<!--<script src="/carexpert/layui/layui.all.js"></script>-->
-<!--</html>-->
+<div class="layui-side-scroll">
+    <ul class="layui-nav layui-nav-tree layui-nav-side layui-bg-blue" lay-filter="test">
+        <!-- 侧边导航: <ul class="layui-nav layui-nav-tree layui-nav-side"> -->
+        <li class="layui-nav-item layui-nav-itemed">
+            <a href="javascript:;">用户管理</a>
+            <dl class="layui-nav-child">
+                <dd><a th:href="@{/user}">用户列表</a></dd>
+            </dl>
+        </li>
+
+        <li class="layui-nav-item">
+            <a>课程管理</a>
+            <dl class="layui-nav-child">
+                <dd><a th:href="@{/module/1}">汽车电工电子</a></dd>
+                <dd><a th:href="@{/module/2}">汽车使用与维护</a></dd>
+                <dd><a th:href="@{/module/3}">发动机构造与检修</a></dd>
+                <dd><a th:href="@{/module/4}">变速器构造与检修</a></dd>
+                <dd><a th:href="@{/module/5}">汽车动力底盘</a></dd>
+                <dd><a th:href="@{/module/6}">汽车电气空调</a></dd>
+                <dd><a th:href="@{/module/7}">汽车检测与故障诊断</a></dd>
+                <dd><a th:href="@{/module/8}">新能源汽车整车</a></dd>
+                <dd><a th:href="@{/module/9}">新能源汽车拓展</a></dd>
+                <dd><a th:href="@{/module/10}">新能源汽车基础</a></dd>
+                <dd><a th:href="@{/module/11}">新能源汽车电能与管理</a></dd>
+                <dd><a th:href="@{/module/12}">新能源汽车电机与控制</a></dd>
+                <dd><a th:href="@{/module/13}">新能源汽车电气</a></dd>
+            </dl>
+        </li>
+
+        <li class="layui-nav-item layui-nav-itemed">
+            <a href="javascript:;">管理员</a>
+            <dl class="layui-nav-child">
+                <dd><a th:href="@{/admin}">列表</a></dd>
+            </dl>
+        </li>
+
+        <li class="layui-nav-item layui-nav-itemed">
+            <a href="javascript:;">其他功能</a>
+            <dl class="layui-nav-child">
+                <dd><a th:href="@{/tag}">标签管理</a></dd>
+            </dl>
+            <dl class="layui-nav-child">
+                <dd><a th:href="@{/version}">版本管理</a></dd>
+            </dl>
+        </li>
+    </ul>
+
+
+    <!--</body>-->
+    <!--<script src="/carexpert/layui/layui.all.js"></script>-->
+    <!--</html>-->
