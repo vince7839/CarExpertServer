@@ -235,7 +235,7 @@ public class ItemController {
 
     @RequestMapping("/version")
     public ModelAndView version(ModelAndView mv) {
-        Properties properties = getProperties();
+        Properties properties = CommonUtil.getProperties();
         String version = properties.getProperty("version");
         mv.addObject("version", version);
         mv.setViewName("version");
@@ -251,7 +251,7 @@ public class ItemController {
         String filename = ClassUtils.getDefaultClassLoader().getResource("").getPath() + "/config.properties";
         try (OutputStream out = new FileOutputStream(filename)) {
             file.transferTo(target);
-            Properties properties = getProperties();
+            Properties properties = CommonUtil.getProperties();
             properties.setProperty("version", version);
             properties.store(out, null);
         } catch (Exception e) {
@@ -263,29 +263,9 @@ public class ItemController {
     @RequestMapping("/vernum")
     @ResponseBody
     public Result vernum() {
-        Properties properties = getProperties();
+        Properties properties = CommonUtil.getProperties();
         String num = properties.getProperty("version");
         return Result.success(num);
-    }
-
-    public Properties getProperties() {
-        String filename = ClassUtils.getDefaultClassLoader().getResource("").getPath() + "/config.properties";
-        File file = new File(filename);
-        if (!file.exists()) {
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        Properties properties = new Properties();
-        try (InputStream in = new FileInputStream(file)) {
-            properties.load(in);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return properties;
     }
 
     @RequestMapping("/module/{moduleFlag}")

@@ -5,11 +5,42 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Properties;
 
 public class CommonUtil {
 
-    public static String HOST = "192.168.8.101";
+
+
+    public static String getHost() {
+        String HOST = getProperties().getProperty("host");
+        if(StringUtils.isEmpty(HOST)){
+            HOST = "47.99.60.167:11111";
+        }
+        return HOST;
+    }
+
+    public static Properties getProperties() {
+        String filename = ClassUtils.getDefaultClassLoader().getResource("").getPath() + "/config.properties";
+        File file = new File(filename);
+        Properties properties = new Properties();
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        try (InputStream in = new FileInputStream(file)) {
+            properties.load(in);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return properties;
+    }
 
     public static boolean isOptionRight(String option, Integer answer) {
         Integer builder = 0;
@@ -37,11 +68,11 @@ public class CommonUtil {
     public static String getFileUrl(Item item){
         String url = "";
         if (CommonType.ITEM_TYPE_DOCUMENT.equals(item.getType())){
-            url = "http://"+HOST+":8080/carexpert/document/"+item.getFilename();
+            url = "http://"+getHost()+"/carexpert/document/"+item.getFilename();
         }else if(CommonType.ITEM_TYPE_VIDEO.equals(item.getType())){
-            url = "http://"+HOST+":8080/carexpert/video/"+item.getFilename();
+            url = "http://"+getHost()+"/carexpert/video/"+item.getFilename();
         }else if (CommonType.ITEM_TYPE_IMAGE.equals(item.getType())){
-            url = "http://"+HOST+":8080/carexpert/image/"+item.getFilename();
+            url = "http://"+getHost()+"/carexpert/image/"+item.getFilename();
         }
         return url;
     }
@@ -71,7 +102,7 @@ public class CommonUtil {
         if (StringUtils.isEmpty(filename)) {
             return "";
         }
-        return "http://"+HOST+":8080/carexpert/cover/"+filename;
+        return "http://"+getHost()+"/carexpert/cover/"+filename;
     }
 
     public static void deleteFile(Item item){
