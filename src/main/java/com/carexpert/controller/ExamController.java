@@ -32,6 +32,38 @@ public class ExamController {
         return mv;
     }
 
+    @RequestMapping("/question/list")
+    @ResponseBody
+    public Result list(Integer parent){
+        List<Question> list = service.findByParent(parent);
+        return Result.success(list);
+    }
+
+    @ResponseBody
+    @RequestMapping("/question/save2")
+    public Result add2(Question question,String[] answers){
+        if (answers != null){
+            Integer builder = 0;
+            for (String item:answers) {
+                if ("A".equals(item)){
+                    builder = builder | 0x1;
+                }
+                if ("B".equals(item)){
+                    builder = builder | (0x1 << 1);
+                }
+                if ("C".equals(item)){
+                    builder = builder | (0x1 << 2);
+                }
+                if ("D".equals(item)){
+                    builder = builder | (0x1 << 3);
+                }
+            }
+            question.setAnswer(builder);
+        }
+        service.save(question);
+        return Result.SUCCESS;
+    }
+
     @RequestMapping("/question/save")
     public String add(Question question,String[] answers){
         System.out.println(question+" answers:"+ Arrays.toString(answers));

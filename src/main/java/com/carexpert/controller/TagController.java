@@ -43,6 +43,13 @@ public class TagController {
         return Result.SUCCESS;
     }
 
+    @RequestMapping("/tag/list")
+    @ResponseBody
+    public Result list(){
+        List<Tag> tags = tagRepository.findAll();
+        return Result.success(tags);
+    }
+
     @RequestMapping("/tag")
     public ModelAndView all(ModelAndView mv){
         List<Tag> tags = tagRepository.findAll();
