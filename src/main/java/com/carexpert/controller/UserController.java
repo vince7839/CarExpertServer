@@ -6,16 +6,20 @@ import com.carexpert.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.data.domain.Page;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import javax.validation.constraints.NotNull;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Random;
+import java.util.*;
 
 @Controller
 public class UserController {
@@ -184,5 +188,37 @@ public class UserController {
         vo.setPage(page);
         vo.setData(result.getContent());
         return vo;
+    }
+
+    @RequestMapping("/user/search")
+    @ResponseBody
+    public Result search(User user){
+        Specification<User> sp = new Specification<User>() {
+            List<Predicate> predicates = new ArrayList<>();
+            @Override
+            public Predicate toPredicate(Root<User> root, CriteriaQuery<?> cq, CriteriaBuilder cb) {
+                if (!StringUtils.isEmpty(user.getUsername())){
+                    Predicate predicate = cb.like(root.get("username").as(String.class),"%"+user.getUsername()+"%");
+                    predicates.add(predicate);
+                }
+                if (!StringUtils.isEmpty(user.getName())){
+                    Predicate predicate = cb.like(root.get("name").as(String.class),"%"+user.getName()+"%");
+                    predicates.add(predicate);
+                }
+                if (!StringUtils.isEmpty(user.getPhone())){
+                    Predicate predicate = cb.like(root.get("phone").as(String.class),"%"+user.getPhone()+"%");
+                    predicates.add(predicate);
+                }
+                if (!StringUtils.isEmpty(user.getEmail())){
+                    Predicate predicate = cb.like(root.get("email").as(String.class),"%"+user.getEmail()+"%");
+                    predicates.add(predicate);
+                }
+                Predicate[] arr = new Predicate[predicates.size()];
+                cq.where(predicates.toArray(arr));
+                return cq.getRestriction();
+            }
+        };
+        List<User> list = service.search(sp);
+        return Result.success(list);
     }
 }

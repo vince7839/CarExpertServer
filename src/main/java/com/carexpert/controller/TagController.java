@@ -20,13 +20,14 @@ public class TagController {
 
     @RequestMapping("/tag/add")
     @ResponseBody
-    public Result add(String name){
+    public Result add(String name,String type){
         System.out.println("add tag："+name);
         if(tagRepository.existsByName(name)){
             return Result.fail(name+" 已经存在");
         }
         Tag tag = new Tag();
         tag.setName(name);
+        tag.setType(type);
         tagRepository.save(tag);
         return Result.SUCCESS;
     }
@@ -45,8 +46,8 @@ public class TagController {
 
     @RequestMapping("/tag/list")
     @ResponseBody
-    public Result list(){
-        List<Tag> tags = tagRepository.findAll();
+    public Result list(String type){
+        List<Tag> tags = tagRepository.findByType(type);
         return Result.success(tags);
     }
 
