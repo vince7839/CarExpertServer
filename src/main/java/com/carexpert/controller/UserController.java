@@ -53,6 +53,7 @@ public class UserController {
     }
 
     @RequestMapping("/user/delete/{id}")
+    @ResponseBody
     public Result delete(@PathVariable Integer id) {
         service.deleteById(id);
         return Result.SUCCESS;

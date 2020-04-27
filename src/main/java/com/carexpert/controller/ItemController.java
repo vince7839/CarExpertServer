@@ -306,6 +306,21 @@ public class ItemController {
         return Result.success(result);
     }
 
+    @RequestMapping("/heat")
+    @ResponseBody
+    public Result heat(Integer id) {
+        Item item = itemService.findById(id);
+        if (item != null){
+            Integer heat = item.getHeat();
+            if (heat != null){
+                heat += 1;
+                item.setHeat(heat);
+                itemService.save(item);
+            }
+        }
+        return Result.SUCCESS;
+    }
+
     private List<TreeNode> buildTree(Integer parent) {
 
         List<Item> items = itemService.findByParent(parent);

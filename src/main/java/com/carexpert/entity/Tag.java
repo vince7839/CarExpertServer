@@ -13,4 +13,5 @@ public class Tag {
     @GeneratedValue
     Integer id;
     String name;
+    String type;
 }
