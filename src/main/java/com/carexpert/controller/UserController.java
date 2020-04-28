@@ -85,13 +85,11 @@ public class UserController {
 
 
 
-   // @RequestMapping("/user/{id}")
-    public ModelAndView info(@PathVariable Integer id, ModelAndView mv) {
+    @RequestMapping("/user/{id}")
+    @ResponseBody
+    public Result info(@PathVariable Integer id) {
         User user = service.findById(id);
-        mv.addObject("user", user);
-        mv.addObject("util", new CommonUtil());
-        mv.setViewName("info");
-        return mv;
+        return Result.success(user);
     }
 
     @RequestMapping("/user/data")

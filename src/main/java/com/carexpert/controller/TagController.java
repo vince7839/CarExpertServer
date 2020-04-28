@@ -5,6 +5,7 @@ import com.carexpert.dao.TagRepository;
 import com.carexpert.entity.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -47,7 +48,8 @@ public class TagController {
     @RequestMapping("/tag/list")
     @ResponseBody
     public Result list(String type){
-        List<Tag> tags = tagRepository.findByType(type);
+        List<Tag> tags = StringUtils.isEmpty(type) ? tagRepository.findAll()
+                : tagRepository.findByType(type);
         return Result.success(tags);
     }
 
