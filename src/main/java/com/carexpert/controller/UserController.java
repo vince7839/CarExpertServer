@@ -2,6 +2,7 @@ package com.carexpert.controller;
 
 import com.carexpert.common.*;
 import com.carexpert.entity.User;
+import com.carexpert.service.MessageService;
 import com.carexpert.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
@@ -29,6 +30,9 @@ public class UserController {
 
     @Autowired
     CacheManager cacheManager;
+
+    @Autowired
+    MessageService messageService;
 
     @RequestMapping("/user")
     public String user(ModelAndView mv, Integer page) {
@@ -120,23 +124,38 @@ public class UserController {
         }
     }
 
+//    @RequestMapping("/user/reset")
+//    @ResponseBody
+//    public Result reset(Integer id, @NotNull String code,@NotNull Integer type, String data) throws Exception {
+//        System.out.println("reset: id:"+id+" code:"+code+" type:"+type+" data:"+data);
+//        User user = service.findById(id);
+//        String cacheCode = cacheManager.getCache("vcode").get(id,String.class);
+//        System.out.println("cache vcode:"+cacheCode);
+//        if (user == null){
+//            return Result.fail("no such user");
+//        }else if(!code.equals(cacheCode)){
+//            return Result.fail("code is wrong");
+//        } else if (type.equals(CommonType.RESET_TYPE_PHONE)){
+//            user.setPhone(data);
+//        }else if(type.equals(CommonType.RESET_TYPE_PASSWORD) ){
+//            user.setPassword(data);
+//        }
+//        cacheManager.getCache("vcode").evict(id);
+//        service.update(user);
+//        return Result.success(null);
+//    }
+
     @RequestMapping("/user/reset")
     @ResponseBody
-    public Result reset(Integer id, @NotNull String code,@NotNull Integer type, String data) throws Exception {
-        System.out.println("reset: id:"+id+" code:"+code+" type:"+type+" data:"+data);
+    public Result reset(Integer id,@NotNull Integer type, String data) throws Exception {
         User user = service.findById(id);
-        String cacheCode = cacheManager.getCache("vcode").get(id,String.class);
-        System.out.println("cache vcode:"+cacheCode);
         if (user == null){
             return Result.fail("no such user");
-        }else if(!code.equals(cacheCode)){
-            return Result.fail("code is wrong");
-        } else if (type.equals(CommonType.RESET_TYPE_PHONE)){
+        }else if (type.equals(CommonType.RESET_TYPE_PHONE)){
             user.setPhone(data);
         }else if(type.equals(CommonType.RESET_TYPE_PASSWORD) ){
             user.setPassword(data);
         }
-        cacheManager.getCache("vcode").evict(id);
         service.update(user);
         return Result.success(null);
     }
@@ -166,7 +185,7 @@ public class UserController {
             //send code
             System.out.println("generate vcode:"+code);
             cacheManager.getCache("vcode").put(id,code);
-            return Result.success(null);
+            return Result.success(code);
         }else {
             return Result.fail("no such user");
         }

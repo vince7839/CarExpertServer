@@ -311,17 +311,19 @@ public class ItemController {
         return Result.success(result);
     }
 
-    @RequestMapping("/heat")
+    @RequestMapping("/heat/{id}")
     @ResponseBody
-    public Result heat(Integer id) {
+    public Result heat(@PathVariable Integer id) {
         Item item = itemService.findById(id);
         if (item != null){
             Integer heat = item.getHeat();
             if (heat != null){
                 heat += 1;
-                item.setHeat(heat);
-                itemService.save(item);
+            }else {
+                heat = 1;
             }
+            item.setHeat(heat);
+            itemService.save(item);
         }
         return Result.SUCCESS;
     }
